@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Sidebar functions exposed globally to be called from chatController too
-  window.renderSidebar = function() {
+  function renderSidebar() {
     const list = document.getElementById('docs-list');
     list.innerHTML = '';
     const docs = DocumentModel.getDocuments();
@@ -172,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
       list.appendChild(item);
     });
   }
+  window.renderSidebar = renderSidebar;
 
   document.getElementById('new-doc-btn').addEventListener('click', () => {
     DocumentModel.clearActive();
