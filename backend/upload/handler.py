@@ -4,13 +4,14 @@ import uuid
 import base64
 import boto3
 import sys
+import io
+from PyPDF2 import PdfReader
 
 # Agregar la carpeta backend al sys.path para importar shared
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from shared.db import DynamoDBClient
 
 s3_client = boto3.client('s3')
-textract_client = boto3.client('textract')
 
 def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 100) -> list[str]:
     # Divide el texto en chunks con solapamiento
@@ -67,21 +68,16 @@ def lambda_handler(event, context):
             ContentType='application/pdf'
         )
         
-        # 3. Llamar a Textract
-        response = textract_client.detect_document_text(
-            Document={
-                'S3Object': {
-                    'Bucket': bucket_name,
-                    'Name': s3_key
-                }
-            }
-        )
+        # 3. Extraer texto usando PyPDF2 en memoria
+        pdf_file = io.BytesIO(pdf_bytes)
+        reader = PdfReader(pdf_file)
         
-        # 4. Extraer texto de bloques LINE
+        # 4. Concatenar texto de todas las páginas
         extracted_text = []
-        for item in response.get('Blocks', []):
-            if item['BlockType'] == 'LINE':
-                extracted_text.append(item['Text'])
+        for page in reader.pages:
+            text = page.extract_text()
+            if text:
+                extracted_text.append(text)
                 
         full_text = " ".join(extracted_text)
         

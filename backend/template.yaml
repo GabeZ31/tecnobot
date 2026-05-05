@@ -88,11 +88,6 @@ Resources:
       Policies:
         - S3FullAccessPolicy:
             BucketName: tecnobot-pdfs-gabez31
-        - Statement:
-            - Effect: Allow
-              Action:
-                - textract:DetectDocumentText
-              Resource: '*'
         - DynamoDBCrudPolicy:
             TableName: !Ref DocumentsTable
       Events:
