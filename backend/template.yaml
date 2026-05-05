@@ -83,7 +83,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: TecnoBot-Upload
-      Handler: upload/handler.lambda_handler
+      CodeUri: upload/
+      Handler: handler.lambda_handler
       Timeout: 60
       Policies:
         - S3FullAccessPolicy:
@@ -103,7 +104,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: TecnoBot-Ask
-      Handler: ask/handler.lambda_handler
+      CodeUri: ask/
+      Handler: handler.lambda_handler
       Timeout: 30
       Policies:
         - DynamoDBReadPolicy:
