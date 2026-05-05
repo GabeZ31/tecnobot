@@ -1,23 +1,27 @@
-// Controla la sección de upload
 document.addEventListener('DOMContentLoaded', () => {
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-input');
   const browseBtn = document.getElementById('browse-btn');
-  const progressContainer = document.getElementById('upload-progress-container');
-  const progressBar = document.getElementById('upload-progress');
-  const statusMsg = document.getElementById('upload-status');
+  const progressFill = document.getElementById('upload-progress-fill');
+  const btnLabel = document.getElementById('upload-btn-label');
+  const errorMsg = document.getElementById('upload-error');
   
-  const uploadSection = document.getElementById('upload-section');
-  const chatSection = document.getElementById('chat-section');
+  const uploadView = document.getElementById('upload-view');
+  const chatView = document.getElementById('chat-view');
   const activeDocName = document.getElementById('active-doc-name');
 
-  // Abre el selector de archivos al hacer clic en el botón o zona
+  // Load initial history
+  renderSidebar();
+
+  // Click on browse button or drop zone triggers file input
   browseBtn.addEventListener('click', () => fileInput.click());
   dropZone.addEventListener('click', (e) => {
-    if (e.target !== browseBtn) fileInput.click();
+    if (e.target !== browseBtn && e.target !== btnLabel && e.target !== progressFill) {
+      fileInput.click();
+    }
   });
 
-  // Eventos de Drag & Drop
+  // Drag and Drop
   dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropZone.classList.add('dragover');
@@ -30,71 +34,88 @@ document.addEventListener('DOMContentLoaded', () => {
   dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
     dropZone.classList.remove('dragover');
-    
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFile(e.dataTransfer.files[0]);
     }
   });
 
-  // Evento de selección de archivo manual
   fileInput.addEventListener('change', () => {
     if (fileInput.files && fileInput.files.length > 0) {
       handleFile(fileInput.files[0]);
     }
   });
 
-  /**
-   * Procesa el archivo seleccionado
-   * @param {File} file 
-   */
+  function showError(msg) {
+    errorMsg.textContent = msg;
+    errorMsg.classList.remove('hidden');
+    // reset button
+    browseBtn.disabled = false;
+    btnLabel.textContent = 'Explorar archivos';
+    progressFill.style.width = '0%';
+  }
+
+  function hideError() {
+    errorMsg.classList.add('hidden');
+    errorMsg.textContent = '';
+  }
+
+  function setProgress(percent, text) {
+    progressFill.style.width = `${percent}%`;
+    if (text) btnLabel.textContent = text;
+  }
+
   async function handleFile(file) {
-    // Validar tipo
+    hideError();
+
     if (file.type !== 'application/pdf') {
-      showStatus('Por favor, selecciona un archivo PDF válido.', 'error');
+      showError('Por favor, selecciona un archivo PDF.');
       return;
     }
 
-    // Validar tamaño (Max 5MB)
-    const maxSize = 5 * 1024 * 1024;
+    const maxSize = 15 * 1024 * 1024;
     if (file.size > maxSize) {
-      showStatus('El archivo excede el límite de 5MB.', 'error');
+      showError('El archivo excede el límite de 15MB.');
       return;
     }
 
-    hideStatus();
-    showProgress(0);
+    // UI state: loading
+    browseBtn.disabled = true;
+    setProgress(0, 'Subiendo... 0%');
 
     try {
-      // Simular progreso de lectura local
-      showProgress(30);
+      // Simulate initial progress to 60%
+      setTimeout(() => setProgress(30, 'Subiendo... 30%'), 300);
+      setTimeout(() => setProgress(60, 'Procesando... 60%'), 800);
+
       const base64Content = await readFileAsBase64(file);
       
-      showProgress(60);
-      // Enviar al backend
+      // Llamada real al backend
       const response = await ApiService.uploadDocument(file.name, base64Content);
-      
-      showProgress(100);
-      showStatus('Documento procesado con éxito.', 'success');
-      
+
+      setProgress(100, '✓ Listo');
+      browseBtn.classList.add('success');
+
       // Guardar en modelo
-      DocumentModel.setDocument(response.documentId, file.name);
-      
-      // Esperar un momento para mostrar el 100% y luego cambiar de vista
+      DocumentModel.saveDocument(response.documentId, file.name);
+      DocumentModel.setActive(response.documentId, file.name);
+
+      // Renderizar sidebar actualizada
+      renderSidebar();
+
+      // Ir al chat
       setTimeout(() => {
+        browseBtn.classList.remove('success');
+        browseBtn.disabled = false;
+        setProgress(0, 'Explorar archivos');
+        fileInput.value = '';
         switchToChatView(file.name);
-      }, 1000);
+      }, 1500);
 
     } catch (error) {
-      showProgress(0);
-      showStatus(error.message || 'Ocurrió un error al procesar el documento.', 'error');
+      showError(error.message || 'Error al subir el archivo');
     }
   }
 
-  /**
-   * Convierte un archivo a base64
-   * @param {File} file 
-   * @returns {Promise<string>}
-   */
   function readFileAsBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -104,52 +125,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /**
-   * Muestra mensaje de estado
-   * @param {string} msg 
-   * @param {string} type - 'error' | 'success'
-   */
-  function showStatus(msg, type) {
-    statusMsg.textContent = msg;
-    statusMsg.className = `status-msg status--${type}`;
-    statusMsg.classList.remove('hidden');
-  }
-
-  /**
-   * Oculta mensaje de estado
-   */
-  function hideStatus() {
-    statusMsg.classList.add('hidden');
-    statusMsg.className = 'status-msg';
-  }
-
-  /**
-   * Muestra barra de progreso
-   * @param {number} percent 
-   */
-  function showProgress(percent) {
-    progressContainer.classList.remove('hidden');
-    progressBar.style.width = `${percent}%`;
-    if (percent === 0) {
-      setTimeout(() => progressContainer.classList.add('hidden'), 300);
-    }
-  }
-
-  /**
-   * Cambia a la vista de chat
-   * @param {string} fileName 
-   */
   function switchToChatView(fileName) {
-    uploadSection.classList.add('hidden');
-    chatSection.classList.remove('hidden');
+    uploadView.classList.add('hidden');
+    chatView.classList.remove('hidden');
     activeDocName.textContent = fileName;
-    
-    // Resetear formulario para futuras subidas
-    fileInput.value = '';
-    showProgress(0);
-    hideStatus();
-    
-    // Disparar evento para que el controlador de chat se prepare
     document.dispatchEvent(new CustomEvent('documentLoaded'));
   }
+
+  // Sidebar functions exposed globally to be called from chatController too
+  window.renderSidebar = function() {
+    const list = document.getElementById('docs-list');
+    list.innerHTML = '';
+    const docs = DocumentModel.getDocuments();
+
+    docs.forEach(doc => {
+      const isCurrent = doc.documentId === DocumentModel.currentDocumentId;
+      
+      const item = document.createElement('div');
+      item.className = `doc-item ${isCurrent ? 'active' : ''}`;
+      
+      // Calculate relative time
+      const date = new Date(doc.date);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      let relativeTime = '';
+      if (diffMins < 60) relativeTime = `Hace ${diffMins} min`;
+      else if (diffMins < 1440) relativeTime = `Hace ${Math.floor(diffMins/60)} h`;
+      else relativeTime = `Hace ${Math.floor(diffMins/1440)} d`;
+      if (diffMins === 0) relativeTime = 'Justo ahora';
+
+      item.innerHTML = `
+        <div class="doc-item-top">
+          <div class="doc-item-icon" style="background-color: ${doc.bg}; color: ${doc.color}">📄</div>
+          <span class="doc-item-title">${doc.fileName}</span>
+        </div>
+        <div class="doc-item-date">${relativeTime}</div>
+      `;
+
+      item.addEventListener('click', () => {
+        DocumentModel.setActive(doc.documentId, doc.fileName);
+        renderSidebar(); // update active class
+        switchToChatView(doc.fileName);
+      });
+
+      list.appendChild(item);
+    });
+  }
+
+  document.getElementById('new-doc-btn').addEventListener('click', () => {
+    DocumentModel.clearActive();
+    chatView.classList.add('hidden');
+    uploadView.classList.remove('hidden');
+    renderSidebar(); // remove active class from list
+  });
 });

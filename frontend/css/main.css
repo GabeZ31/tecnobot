@@ -1,16 +1,17 @@
 :root {
-  --bg: #f7f8fa;
+  --bg: #f0f2f7;
   --surface: #ffffff;
   --border: #e4e7ef;
   --text: #1a1d2e;
   --dim: #7a8099;
+  --muted: #aab0c8;
   --accent: #3a6ef5;
   --accent-hover: #2952d4;
-  --success: #1D9E75;
-  --error: #E24B4A;
+  --success: #16a34a;
+  --error: #dc2626;
   --radius: 12px;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --radius-lg: 20px;
+  --font: system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -24,66 +25,46 @@ body {
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.5;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
-nav {
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Sidebar Layout */
+.sidebar {
+  width: 240px;
   background-color: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 1rem 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-}
-
-.nav-content {
-  max-width: 1000px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.nav-content .logo {
-  width: 28px;
-  height: 28px;
-  color: var(--accent);
-}
-
-.nav-content h1 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.5px;
-}
-
-main {
-  flex: 1;
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem;
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  z-index: 10;
+  animation: slideInLeft 0.4s ease forwards;
 }
 
-section {
+/* Main Area Layout */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: var(--bg);
+  animation: fadeUp 0.4s ease 0.1s forwards;
+  opacity: 0;
+}
+
+.view-section {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-h2 {
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-p {
-  color: var(--dim);
-  text-align: center;
-  margin-bottom: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Utilities */
@@ -97,4 +78,20 @@ p {
   z-index: -1;
   width: 0;
   height: 0;
+}
+
+/* Animations */
+@keyframes slideInLeft {
+  from { transform: translateX(-20px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }

@@ -1,32 +1,48 @@
-// Modelo que gestiona el historial de mensajes
 const ChatModel = {
-  messages: [],
+  storageKey: 'tecnobot_chats',
 
-  /**
-   * Añade un mensaje al historial
-   * @param {string} role - 'user' o 'bot'
-   * @param {string} content - Contenido del mensaje
-   */
-  addMessage(role, content) {
-    this.messages.push({
-      role: role,
-      content: content,
-      timestamp: new Date()
+  // Carga todo el historial del storage (diccionario { docId: [messages] })
+  _getAllChats() {
+    try {
+      const stored = localStorage.getItem(this.storageKey);
+      return stored ? JSON.parse(stored) : {};
+    } catch (e) {
+      return {};
+    }
+  },
+
+  // Guarda todo el historial en storage
+  _saveAllChats(chats) {
+    localStorage.setItem(this.storageKey, JSON.stringify(chats));
+  },
+
+  addMessage(documentId, role, content) {
+    if (!documentId) return;
+    
+    const chats = this._getAllChats();
+    if (!chats[documentId]) {
+      chats[documentId] = [];
+    }
+
+    chats[documentId].push({
+      role,
+      content,
+      timestamp: new Date().toISOString()
     });
+
+    this._saveAllChats(chats);
   },
 
-  /**
-   * Obtiene todos los mensajes del historial
-   * @returns {Array} Lista de mensajes
-   */
-  getMessages() {
-    return this.messages;
+  getMessages(documentId) {
+    if (!documentId) return [];
+    const chats = this._getAllChats();
+    return chats[documentId] || [];
   },
 
-  /**
-   * Limpia el historial de mensajes
-   */
-  clear() {
-    this.messages = [];
+  clearMessages(documentId) {
+    if (!documentId) return;
+    const chats = this._getAllChats();
+    delete chats[documentId];
+    this._saveAllChats(chats);
   }
 };
