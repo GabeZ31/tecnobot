@@ -1,5 +1,5 @@
 // Módulo ApiService — todas las llamadas HTTP al backend
-const API_BASE_URL = 'https://TU-API-GATEWAY-URL'; // Reemplazar con la URL del API Gateway al desplegar
+const API_BASE_URL = 'https://bdtpazw1ic.execute-api.us-east-1.amazonaws.com/prod'; // URL real del API Gateway
 
 const ApiService = {
   /**
