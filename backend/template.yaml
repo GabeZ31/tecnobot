@@ -11,6 +11,11 @@ Globals:
         TABLE_NAME: !Ref DocumentsTable
         BUCKET_NAME: !Ref PDFsBucket
         REGION: !Ref AWS::Region
+  Api:
+    Cors:
+      AllowMethods: "'POST,OPTIONS,GET'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+      AllowOrigin: "'*'"
 
 Resources:
 
@@ -73,10 +78,6 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: prod
-      Cors:
-        AllowMethods: "'POST,OPTIONS'"
-        AllowHeaders: "'Content-Type'"
-        AllowOrigin: "'*'"
 
   # ─── Lambda: Upload ────────────────────────────────────────────────────────
   UploadFunction:
