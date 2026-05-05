@@ -3,8 +3,6 @@ import json
 import boto3
 import sys
 
-# Agregar la carpeta backend al sys.path para importar shared
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from shared.db import DynamoDBClient
 
 bedrock_client = boto3.client('bedrock-runtime', region_name=os.environ.get('REGION', 'us-east-1'))

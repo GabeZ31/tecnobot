@@ -7,8 +7,6 @@ import sys
 import io
 from PyPDF2 import PdfReader
 
-# Agregar la carpeta backend al sys.path para importar shared
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from shared.db import DynamoDBClient
 
 s3_client = boto3.client('s3')
