@@ -43,6 +43,9 @@ body {
   display: flex;
   flex-direction: column;
   z-index: 10;
+  opacity: 0;
+}
+.sidebar.animate-in {
   animation: slideInLeft 0.4s ease forwards;
 }
 
@@ -53,8 +56,10 @@ body {
   flex-direction: column;
   position: relative;
   background-color: var(--bg);
-  animation: fadeUp 0.4s ease 0.1s forwards;
   opacity: 0;
+}
+.main.animate-in {
+  animation: fadeUp 0.4s ease 0.1s forwards;
 }
 
 .view-section {
@@ -94,4 +99,64 @@ body {
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+/* Intro Cover */
+.intro-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--surface);
+  color: var(--text);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.intro-cover.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.intro-title {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: scaleUp 0.8s ease cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.intro-subtitle {
+  font-size: 20px;
+  color: var(--dim);
+  animation: fadeUp 0.8s ease 0.2s forwards;
+  opacity: 0;
+}
+
+.intro-hint {
+  position: absolute;
+  bottom: 40px;
+  font-size: 14px;
+  color: var(--muted);
+  animation: pulse 2s infinite;
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.4; }
 }

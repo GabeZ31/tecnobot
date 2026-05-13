@@ -8,6 +8,13 @@
   <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
+  <!-- Intro Cover -->
+  <div id="intro-cover" class="intro-cover">
+    <div class="intro-title">Tecnobot</div>
+    <div class="intro-subtitle">Asistente académico</div>
+    <div class="intro-hint">Haz clic en cualquier parte para comenzar</div>
+  </div>
+
   <div class="app">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -106,6 +113,23 @@
   </div>
 
   <!-- JS en orden de dependencia -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const introCover = document.getElementById('intro-cover');
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('.main');
+      
+      const startApp = () => {
+        introCover.classList.add('hide');
+        sidebar.classList.add('animate-in');
+        main.classList.add('animate-in');
+        introCover.removeEventListener('click', startApp);
+        setTimeout(() => introCover.remove(), 500);
+      };
+
+      introCover.addEventListener('click', startApp);
+    });
+  </script>
   <script src="js/services/apiService.js"></script>
   <script src="js/models/documentModel.js"></script>
   <script src="js/models/chatModel.js"></script>
