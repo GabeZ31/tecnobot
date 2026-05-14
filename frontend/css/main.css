@@ -166,46 +166,28 @@ body {
   100% { transform: translate(40px, 30px) scale(1.1); }
 }
 
-/* Glass Panel */
-.intro-glass-panel {
-  position: relative;
-  z-index: 1;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-  border-radius: 32px;
-  padding: 40px 60px 50px 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: fadeUpGlass 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes fadeUpGlass {
-  from { transform: translateY(40px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
+/* Glass Panel - Removed */
 
 .intro-title {
-  font-size: 56px;
+  font-size: 96px;
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.05em;
   margin-bottom: 4px;
   background: linear-gradient(135deg, var(--accent), #7c3aed);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: scaleUp 0.8s ease cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 1;
 }
 
 .intro-subtitle {
-  font-size: 20px;
+  font-size: 26px;
   color: var(--dim);
   font-weight: 500;
   margin-bottom: 30px;
   animation: fadeUpText 0.8s ease 0.2s forwards;
   opacity: 0;
+  z-index: 1;
 }
 
 .intro-hint {
@@ -219,6 +201,7 @@ body {
   border-radius: 20px;
   border: 1px solid var(--border);
   animation: pulse 2.5s infinite;
+  z-index: 1;
 }
 
 @keyframes scaleUp {
