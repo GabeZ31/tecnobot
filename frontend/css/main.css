@@ -219,3 +219,106 @@ body {
   50% { opacity: 1; transform: scale(1); }
   100% { opacity: 0.6; transform: scale(0.98); }
 }
+
+/* Mobile Overlay */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 15;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.mobile-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile Menu Buttons */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+}
+.mobile-menu-btn svg {
+  width: 24px;
+  height: 24px;
+}
+.mobile-menu-btn:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+.upload-menu-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 5;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .intro-title {
+    font-size: 15vw; /* Responsive font size */
+  }
+  .intro-subtitle {
+    font-size: 5vw;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 20;
+    opacity: 1;
+    animation: none !important; /* disable initial slide animation */
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+  }
+  
+  .hidden-mobile {
+    display: none !important;
+  }
+  
+  .chat-topbar {
+    padding: 12px 16px;
+  }
+  
+  .chat-messages {
+    padding: 16px;
+  }
+  
+  .upload-container {
+    padding: 16px;
+    margin-top: 40px; /* space for the top left menu button */
+  }
+  
+  .drop-zone {
+    padding: 30px 16px;
+  }
+  
+  .blob-1, .blob-2, .blob-3 {
+    width: 250px;
+    height: 250px;
+  }
+}

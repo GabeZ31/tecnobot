@@ -13,6 +13,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load initial history
   renderSidebar();
 
+  // Mobile Sidebar Toggle Logic
+  const sidebar = document.getElementById('sidebar');
+  const mobileOverlay = document.getElementById('mobile-overlay');
+  const uploadMenuBtn = document.querySelector('.upload-menu-btn');
+  const chatMenuBtn = document.querySelector('.chat-menu-btn');
+
+  function toggleSidebar() {
+    sidebar.classList.toggle('open');
+    mobileOverlay.classList.toggle('active');
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    mobileOverlay.classList.remove('active');
+  }
+
+  if (uploadMenuBtn) uploadMenuBtn.addEventListener('click', toggleSidebar);
+  if (chatMenuBtn) chatMenuBtn.addEventListener('click', toggleSidebar);
+  if (mobileOverlay) mobileOverlay.addEventListener('click', closeSidebar);
+
   // Click on browse button or drop zone triggers file input
   browseBtn.addEventListener('click', () => fileInput.click());
   dropZone.addEventListener('click', (e) => {
@@ -167,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         DocumentModel.setActive(doc.documentId, doc.fileName);
         renderSidebar(); // update active class
         switchToChatView(doc.fileName);
+        closeSidebar(); // hide on mobile
       });
 
       list.appendChild(item);
@@ -179,5 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
     chatView.classList.add('hidden');
     uploadView.classList.remove('hidden');
     renderSidebar(); // remove active class from list
+    closeSidebar(); // hide on mobile
   });
 });

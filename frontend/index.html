@@ -21,8 +21,11 @@
   </div>
 
   <div class="app">
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside id="sidebar" class="sidebar">
       <div class="sidebar-header">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -52,6 +55,14 @@
     <main class="main">
       <!-- Vista A: Upload -->
       <section id="upload-view" class="view-section">
+        <button class="mobile-menu-btn upload-menu-btn" aria-label="Abrir menú">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
         <div class="upload-container">
           <h2 class="upload-title">Sube tu documento PDF</h2>
           <p class="upload-subtitle">Haz preguntas con IA al instante</p>
@@ -83,11 +94,20 @@
       <section id="chat-view" class="view-section hidden">
         <!-- Topbar -->
         <header class="chat-topbar">
-          <div class="active-doc-badge">
-            <span class="doc-icon">📄</span>
-            <span id="active-doc-name" class="doc-name">documento.pdf</span>
+          <div class="topbar-left">
+            <button class="mobile-menu-btn chat-menu-btn" aria-label="Abrir menú">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+            <div class="active-doc-badge">
+              <span class="doc-icon">📄</span>
+              <span id="active-doc-name" class="doc-name">documento.pdf</span>
+            </div>
           </div>
-          <button id="export-chat-btn" class="btn-outline-sm">Exportar chat</button>
+          <button id="export-chat-btn" class="btn-outline-sm hidden-mobile">Exportar chat</button>
         </header>
 
         <!-- Tabs -->
