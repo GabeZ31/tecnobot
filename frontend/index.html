@@ -42,8 +42,18 @@
           Subir nuevo PDF
         </button>
 
+        <div class="create-category-container">
+          <input type="text" id="new-category-input" placeholder="Nueva materia..." maxlength="20">
+          <button id="add-category-btn" class="btn-add-category" title="Crear materia">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+
         <div class="docs-section">
-          <span class="docs-label">DOCUMENTOS RECIENTES</span>
+          <span class="docs-label">DOCUMENTOS POR MATERIA</span>
           <div id="docs-list" class="docs-list">
             <!-- Lista generada por JS -->
           </div>
@@ -128,11 +138,23 @@
             </svg>
             Resumen
           </button>
+          <button class="tab-btn" data-tab="study">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tab-icon">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+            </svg>
+            Estudiar
+          </button>
         </div>
 
         <!-- Chat Area -->
         <div id="chat-messages" class="chat-messages">
           <!-- Mensajes inyectados por JS -->
+        </div>
+
+        <!-- Study Area -->
+        <div id="study-messages" class="study-messages hidden">
+          <!-- Cuestionario inyectado por JS -->
         </div>
 
         <!-- Input Area -->
