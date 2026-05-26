@@ -288,8 +288,8 @@
 }
 
 .active-doc-badge svg.doc-icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   stroke: var(--accent);
 }
 
@@ -342,14 +342,14 @@
 }
 
 .tab-btn svg.tab-icon {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   stroke-width: 2.2px;
 }
 
 .doc-item-icon svg {
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
 }
 
 /* Chat Messages */
@@ -450,16 +450,16 @@
 .message.bot .bubble h2,
 .message.bot .bubble h3,
 .message.bot .bubble h4 {
-  margin-top: 16px;
-  margin-bottom: 8px;
+  margin-top: 1.25em;
+  margin-bottom: 0.6em;
   font-weight: 600;
   color: var(--text);
   line-height: 1.4;
 }
-.message.bot .bubble h1 { font-size: 15px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
-.message.bot .bubble h2 { font-size: 14px; }
+.message.bot .bubble h1 { font-size: 1.35em; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+.message.bot .bubble h2 { font-size: 1.2em; }
 .message.bot .bubble h3, 
-.message.bot .bubble h4 { font-size: 13px; }
+.message.bot .bubble h4 { font-size: 1.1em; }
 
 .message.bot .bubble table {
   width: 100%;
