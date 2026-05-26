@@ -7,37 +7,181 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Markdown Parser
   function parseMarkdown(text) {
-    let html = text;
-    
-    // Replace Code Blocks (pre/code)
-    html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-    // Replace Inline Code
-    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-    // Replace Bold
-    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    // Replace Italic
-    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-    
-    // Lists (simple approach)
-    // Ordered
-    html = html.replace(/^\s*\d+\.\s+(.*)$/gm, '<ol><li>$1</li></ol>');
-    html = html.replace(/<\/ol>\n<ol>/g, '');
-    // Unordered
-    html = html.replace(/^\s*[-*]\s+(.*)$/gm, '<ul><li>$1</li></ul>');
-    html = html.replace(/<\/ul>\n<ul>/g, '');
-    
-    // Paragraphs (double line breaks)
-    html = html.replace(/\n\n+/g, '</p><p>');
-    // Single line breaks inside p
-    html = html.replace(/([^>\n])\n([^<\n])/g, '$1<br>$2');
-
-    // Wrap in initial P if it doesn't start with block element
-    if (!html.startsWith('<')) {
-      html = '<p>' + html + '</p>';
+    // Helper to escape HTML characters in code blocks
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
-    // Clean up empty paragraphs
-    html = html.replace(/<p><\/p>/g, '');
-    
+
+    function parseInline(str) {
+      let result = str;
+      // Bold: **text**
+      result = result.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      // Italic: *text*
+      result = result.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      // Inline code: `code`
+      result = result.replace(/`([^`]+)`/g, '<code>$1</code>');
+      return result;
+    }
+
+    const lines = text.split(/\r?\n/);
+    let html = '';
+    let currentParagraph = '';
+    let currentList = [];
+    let currentListType = null; // 'ul' or 'ol'
+    let inCodeBlock = false;
+    let codeLines = [];
+    let inTable = false;
+    let tableRows = [];
+
+    function flushParagraph() {
+      if (currentParagraph) {
+        html += `<p>${parseInline(currentParagraph.trim())}</p>`;
+        currentParagraph = '';
+      }
+    }
+
+    function flushList() {
+      if (currentList.length > 0) {
+        html += `<${currentListType}>`;
+        currentList.forEach(item => {
+          html += `<li>${parseInline(item)}</li>`;
+        });
+        html += `</${currentListType}>`;
+        currentList = [];
+        currentListType = null;
+      }
+    }
+
+    function flushTable() {
+      if (inTable && tableRows.length > 0) {
+        html += '<table>';
+        tableRows.forEach((row, index) => {
+          if (index === 0) html += '<thead>';
+          if (index === 1) html += '<tbody>';
+          
+          html += '<tr>';
+          row.forEach(cell => {
+            const cellTag = index === 0 ? 'th' : 'td';
+            html += `<${cellTag}>${parseInline(cell)}</${cellTag}>`;
+          });
+          html += '</tr>';
+          
+          if (index === 0) html += '</thead>';
+          if (index === tableRows.length - 1 && index > 0) html += '</tbody>';
+        });
+        html += '</table>';
+        tableRows = [];
+        inTable = false;
+      }
+    }
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      // Code block check
+      if (trimmed.startsWith('```')) {
+        if (inCodeBlock) {
+          inCodeBlock = false;
+          html += `<pre><code>${escapeHTML(codeLines.join('\n'))}</code></pre>`;
+          codeLines = [];
+        } else {
+          flushParagraph();
+          flushList();
+          flushTable();
+          inCodeBlock = true;
+        }
+        continue;
+      }
+
+      if (inCodeBlock) {
+        codeLines.push(line);
+        continue;
+      }
+
+      // Table line check
+      const isTableLine = trimmed.startsWith('|') && trimmed.endsWith('|');
+      if (isTableLine) {
+        flushParagraph();
+        flushList();
+        const cells = line.split('|').map(c => c.trim()).filter((c, idx, arr) => idx > 0 && idx < arr.length - 1);
+        const isDivider = cells.every(cell => /^:?-+:?$/.test(cell));
+        if (isDivider) {
+          continue;
+        }
+        if (!inTable) {
+          inTable = true;
+          tableRows = [];
+        }
+        tableRows.push(cells);
+        continue;
+      } else {
+        flushTable();
+      }
+
+      // Empty line
+      if (trimmed === '') {
+        flushParagraph();
+        flushList();
+        continue;
+      }
+
+      // Heading check
+      const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
+      if (headingMatch) {
+        flushParagraph();
+        flushList();
+        const level = headingMatch[1].length;
+        html += `<h${level}>${parseInline(headingMatch[2])}</h${level}>`;
+        continue;
+      }
+
+      // List checks
+      const ulMatch = line.match(/^\s*[-*]\s+(.*)$/);
+      const olMatch = line.match(/^\s*(\d+)\.\s+(.*)$/);
+
+      if (ulMatch) {
+        flushParagraph();
+        if (currentListType && currentListType !== 'ul') {
+          flushList();
+        }
+        currentListType = 'ul';
+        currentList.push(ulMatch[1]);
+        continue;
+      }
+
+      if (olMatch) {
+        flushParagraph();
+        if (currentListType && currentListType !== 'ol') {
+          flushList();
+        }
+        currentListType = 'ol';
+        currentList.push(olMatch[2]);
+        continue;
+      }
+
+      // Regular line
+      flushList();
+      if (currentParagraph) {
+        currentParagraph += ' ' + line;
+      } else {
+        currentParagraph = line;
+      }
+    }
+
+    // Flush remaining
+    flushParagraph();
+    flushList();
+    flushTable();
+    if (inCodeBlock && codeLines.length > 0) {
+      html += `<pre><code>${escapeHTML(codeLines.join('\n'))}</code></pre>`;
+    }
+
     return html;
   }
 
