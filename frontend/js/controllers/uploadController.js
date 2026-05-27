@@ -160,132 +160,88 @@ document.addEventListener('DOMContentLoaded', () => {
     list.innerHTML = '';
     
     const docs = DocumentModel.getDocuments();
-    const categories = DocumentModel.getCategories();
 
-    categories.forEach(category => {
-      const categoryDocs = docs.filter(doc => doc.category === category);
-      
-      const categoryGroup = document.createElement('details');
-      categoryGroup.className = 'category-group';
-      categoryGroup.open = true; // start open
+    if (docs.length === 0) {
+      const emptyLabel = document.createElement('div');
+      emptyLabel.style.fontSize = '12px';
+      emptyLabel.style.color = 'var(--dim)';
+      emptyLabel.style.padding = '12px';
+      emptyLabel.style.textAlign = 'center';
+      emptyLabel.style.fontStyle = 'italic';
+      emptyLabel.textContent = 'No hay documentos subidos';
+      list.appendChild(emptyLabel);
+    } else {
+      docs.forEach(doc => {
+        const isCurrent = doc.documentId === DocumentModel.currentDocumentId;
+        
+        const item = document.createElement('div');
+        item.className = `doc-item ${isCurrent ? 'active' : ''}`;
+        
+        // Calculate relative time
+        const date = new Date(doc.date);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        let relativeTime = '';
+        if (diffMins < 60) relativeTime = `Hace ${diffMins} min`;
+        else if (diffMins < 1440) relativeTime = `Hace ${Math.floor(diffMins/60)} h`;
+        else relativeTime = `Hace ${Math.floor(diffMins/1440)} d`;
+        if (diffMins === 0) relativeTime = 'Justo ahora';
 
-      const summary = document.createElement('summary');
-      summary.className = 'category-header';
-      
-      summary.innerHTML = `
-        <div class="category-header-left">
-          <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-          </svg>
-          <span class="category-header-title">${category}</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="category-count">${categoryDocs.length}</span>
-          <svg class="category-header-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
-      `;
-
-      const docsContainer = document.createElement('div');
-      docsContainer.className = 'category-docs';
-
-      if (categoryDocs.length === 0) {
-        const emptyLabel = document.createElement('div');
-        emptyLabel.style.fontSize = '11px';
-        emptyLabel.style.color = 'var(--dim)';
-        emptyLabel.style.padding = '8px 12px';
-        emptyLabel.style.fontStyle = 'italic';
-        emptyLabel.textContent = 'Vacía';
-        docsContainer.appendChild(emptyLabel);
-      } else {
-        categoryDocs.forEach(doc => {
-          const isCurrent = doc.documentId === DocumentModel.currentDocumentId;
-          
-          const item = document.createElement('div');
-          item.className = `doc-item ${isCurrent ? 'active' : ''}`;
-          
-          // Calculate relative time
-          const date = new Date(doc.date);
-          const now = new Date();
-          const diffMs = now - date;
-          const diffMins = Math.floor(diffMs / 60000);
-          let relativeTime = '';
-          if (diffMins < 60) relativeTime = `Hace ${diffMins} min`;
-          else if (diffMins < 1440) relativeTime = `Hace ${Math.floor(diffMins/60)} h`;
-          else relativeTime = `Hace ${Math.floor(diffMins/1440)} d`;
-          if (diffMins === 0) relativeTime = 'Justo ahora';
-
-          item.innerHTML = `
-            <div class="doc-item-wrapper">
-              <div class="doc-item-main">
-                <div class="doc-item-top">
-                  <div class="doc-item-icon" style="background-color: ${doc.bg}; color: ${doc.color}">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                      <polyline points="14 2 14 8 20 8"></polyline>
-                    </svg>
-                  </div>
-                  <span class="doc-item-title" title="${doc.fileName}">${doc.fileName}</span>
-                </div>
-                <div class="doc-item-date">${relativeTime}</div>
-              </div>
-              <div class="doc-item-actions-wrapper">
-                <select class="category-move-select" title="Mover a materia">
-                  ${categories.map(c => `<option value="${c}" ${c === category ? 'selected' : ''}>${c}</option>`).join('')}
-                </select>
-                <button class="doc-action-btn btn-delete" title="Eliminar PDF">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        item.innerHTML = `
+          <div class="doc-item-wrapper">
+            <div class="doc-item-main">
+              <div class="doc-item-top">
+                <div class="doc-item-icon" style="background-color: ${doc.bg}; color: ${doc.color}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
                   </svg>
-                </button>
+                </div>
+                <span class="doc-item-title" title="${doc.fileName}">${doc.fileName}</span>
               </div>
+              <div class="doc-item-date">${relativeTime}</div>
             </div>
-          `;
+            <div class="doc-item-actions-wrapper">
+              <button class="doc-action-btn btn-delete" title="Eliminar PDF">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
 
-          // Event to select document
-          item.addEventListener('click', (e) => {
-            // Only trigger view shift if the user clicked the main body, not the select or delete button
-            if (e.target.tagName !== 'SELECT' && e.target.tagName !== 'OPTION' && !e.target.closest('.doc-action-btn')) {
-              DocumentModel.setActive(doc.documentId, doc.fileName);
-              renderSidebar(); // update active class
-              switchToChatView(doc.fileName);
-              closeSidebar(); // hide on mobile
-            }
-          });
-
-          // Move document category event
-          const moveSelect = item.querySelector('.category-move-select');
-          moveSelect.addEventListener('change', (e) => {
-            const newCat = e.target.value;
-            DocumentModel.setDocumentCategory(doc.documentId, newCat);
-            renderSidebar();
-          });
-
-          // Delete document event
-          const deleteBtn = item.querySelector('.btn-delete');
-          deleteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (confirm(`¿Estás seguro de que deseas eliminar el documento "${doc.fileName}"? Se borrará también todo su historial de chat.`)) {
-              DocumentModel.deleteDocument(doc.documentId);
-              renderSidebar();
-              // If deleted active doc, go to upload view
-              if (DocumentModel.currentDocumentId === null) {
-                chatView.classList.add('hidden');
-                uploadView.classList.remove('hidden');
-              }
-            }
-          });
-
-          docsContainer.appendChild(item);
+        // Event to select document
+        item.addEventListener('click', (e) => {
+          // Only trigger view shift if the user clicked the main body, not the delete button
+          if (!e.target.closest('.doc-action-btn')) {
+            DocumentModel.setActive(doc.documentId, doc.fileName);
+            renderSidebar(); // update active class
+            switchToChatView(doc.fileName);
+            closeSidebar(); // hide on mobile
+          }
         });
-      }
 
-      categoryGroup.appendChild(summary);
-      categoryGroup.appendChild(docsContainer);
-      list.appendChild(categoryGroup);
-    });
+        // Delete document event
+        const deleteBtn = item.querySelector('.btn-delete');
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (confirm(`¿Estás seguro de que deseas eliminar el documento "${doc.fileName}"? Se borrará también todo su historial de chat.`)) {
+            DocumentModel.deleteDocument(doc.documentId);
+            renderSidebar();
+            // If deleted active doc, go to upload view
+            if (DocumentModel.currentDocumentId === null) {
+              chatView.classList.add('hidden');
+              uploadView.classList.remove('hidden');
+            }
+          }
+        });
+
+        list.appendChild(item);
+      });
+    }
   }
   window.renderSidebar = renderSidebar;
 
