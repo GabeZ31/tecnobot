@@ -20,21 +20,27 @@
   padding: 0;
 }
 
-body {
+html, body {
   font-family: var(--font);
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.5;
   height: 100vh;
   height: 100dvh;
+  width: 100%;
   overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .app {
   display: flex;
   height: 100vh;
   height: 100dvh;
-  width: 100vw;
+  width: 100%;
 }
 
 /* Sidebar Layout */

@@ -667,4 +667,20 @@ Importante: La propiedad 'respuesta_correcta' debe ser el índice (0, 1, 2 o 3) 
     });
   }
 
+  // Reset window scroll on focus/blur to prevent mobile keyboard from pushing topbar offscreen
+  if (chatInput) {
+    chatInput.addEventListener('focus', () => {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+      }, 100);
+    });
+    chatInput.addEventListener('blur', () => {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+      }, 100);
+    });
+  }
+
 });
