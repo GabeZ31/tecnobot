@@ -20,6 +20,31 @@
   letter-spacing: -0.02em;
 }
 
+.btn-sidebar-close {
+  display: none; /* hidden on desktop */
+  background: none;
+  border: none;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  margin-left: auto;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-sidebar-close svg {
+  width: 18px;
+  height: 18px;
+  color: var(--dim);
+}
+
+.btn-sidebar-close:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text);
+}
+
 /* Sidebar Content & Buttons */
 .sidebar-content {
   padding: 20px;
@@ -285,6 +310,15 @@
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
+}
+
+.doc-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .active-doc-badge svg.doc-icon {
@@ -1015,4 +1049,74 @@ details.category-group[open] .category-header-arrow {
   font-size: 13px;
   color: var(--dim);
   margin-bottom: 24px;
+}
+
+/* --- Responsive & Mobile Overrides --- */
+
+/* Accessibility for Touch Screens: Force document actions to be permanently visible */
+@media (hover: none) {
+  .doc-item-actions-wrapper {
+    opacity: 1 !important;
+  }
+}
+
+/* Mobile Overrides (under 768px) */
+@media (max-width: 768px) {
+  .btn-sidebar-close {
+    display: flex; /* Show X button on mobile */
+  }
+  
+  .doc-name {
+    max-width: 120px; /* Shorter truncation on mobile */
+  }
+  
+  .message {
+    max-width: 92%; /* Wider messages on mobile */
+  }
+  
+  .chat-input-area {
+    padding: 10px 14px; /* More vertical space for messages */
+  }
+  
+  .chat-input {
+    font-size: 16px; /* Prevents auto-zoom on focus in iOS Safari */
+    padding: 8px 12px;
+  }
+  
+  /* Quiz Studio Mobile Spacing */
+  .quiz-intro-card, 
+  .quiz-card, 
+  .quiz-score-screen {
+    padding: 24px 16px;
+    border-radius: 12px;
+  }
+  
+  .quiz-title {
+    font-size: 18px;
+  }
+  
+  .quiz-question {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  
+  .option-btn {
+    padding: 10px 12px;
+    font-size: 12.5px;
+    gap: 8px;
+  }
+  
+  .option-badge {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+  
+  .explanation-box {
+    padding: 10px 12px;
+  }
+  
+  .explanation-text {
+    font-size: 12px;
+  }
 }

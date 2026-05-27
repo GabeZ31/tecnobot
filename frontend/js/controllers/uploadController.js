@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileOverlay = document.getElementById('mobile-overlay');
   const uploadMenuBtn = document.querySelector('.upload-menu-btn');
   const chatMenuBtn = document.querySelector('.chat-menu-btn');
+  const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
 
   function toggleSidebar() {
     sidebar.classList.toggle('open');
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (uploadMenuBtn) uploadMenuBtn.addEventListener('click', toggleSidebar);
   if (chatMenuBtn) chatMenuBtn.addEventListener('click', toggleSidebar);
   if (mobileOverlay) mobileOverlay.addEventListener('click', closeSidebar);
+  if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', closeSidebar);
 
   // Click on browse button or drop zone triggers file input
   browseBtn.addEventListener('click', () => fileInput.click());
