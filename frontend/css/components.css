@@ -647,37 +647,33 @@
 
 /* Improved Collapsible Categories */
 details.category-group {
-  margin-bottom: 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  margin-bottom: 8px;
   overflow: hidden;
-  background-color: #f8fafc;
   transition: all 0.2s ease;
 }
 
 details.category-group[open] {
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  /* No cards, completely transparent */
 }
 
 summary.category-header {
   list-style: none;
   outline: none;
   cursor: pointer;
-  padding: 12px 14px;
-  font-size: 12px;
+  padding: 8px 10px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--text);
   display: flex;
   align-items: center;
   justify-content: space-between;
   user-select: none;
-  transition: background-color 0.2s;
-  background-color: #f8fafc;
+  transition: all 0.2s ease;
+  border-radius: 8px;
 }
 
 details.category-group[open] summary.category-header {
-  border-bottom: 1px solid var(--border);
+  border-bottom: none;
 }
 
 summary.category-header::-webkit-details-marker {
@@ -685,7 +681,7 @@ summary.category-header::-webkit-details-marker {
 }
 
 summary.category-header:hover {
-  background-color: #f1f5f9;
+  background-color: rgba(0, 0, 0, 0.04);
 }
 
 .category-header-left {
@@ -721,39 +717,50 @@ details.category-group[open] .category-header-arrow {
 }
 
 .category-docs {
-  padding: 8px 10px 10px 10px;
+  padding: 4px 0 4px 18px; /* Indent sub items cleanly */
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 /* Document Item & Actions */
 .doc-item {
   display: flex;
   flex-direction: column;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   text-decoration: none;
   color: inherit;
-  background-color: #f8fafc;
-  border: 1px solid var(--border);
   position: relative;
 }
 
 .doc-item:hover {
-  background-color: #f1f5f9;
-  border-color: #cbd5e1;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: transparent;
 }
 
 .doc-item.active {
-  background-color: #eef2ff;
-  border-color: rgba(58, 110, 245, 0.3);
+  background-color: rgba(58, 110, 245, 0.08);
+  border-color: transparent;
 }
 
 .doc-item.active .doc-item-title {
   color: var(--accent);
+  font-weight: 600;
+}
+
+/* Accent bar left indicator for active doc */
+.doc-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background-color: var(--accent);
+  border-radius: 0 4px 4px 0;
 }
 
 .doc-item-wrapper {
@@ -1152,16 +1159,19 @@ details.category-group[open] .category-header-arrow {
 
   /* Mobile folder and file spacing overrides */
   details.category-group {
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
   summary.category-header {
-    padding: 14px 16px;
+    padding: 12px 14px;
   }
   .category-docs {
-    padding: 10px 12px 12px 12px;
-    gap: 10px;
+    padding: 2px 0 2px 14px;
+    gap: 6px;
   }
   .doc-item {
-    padding: 14px 16px;
+    padding: 12px 14px;
+  }
+  .doc-item-date {
+    display: none !important; /* Hide date on mobile to prevent wrapping and overlaps */
   }
 }
