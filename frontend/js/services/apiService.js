@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://bdtpazw1ic.execute-api.us-east-1.amazonaws.com/prod';
+const API_BASE_URL = 'https://t0bzkfsz0e.execute-api.us-east-1.amazonaws.com/prod';
 
 const ApiService = {
   async uploadDocument(fileName, fileContentBase64) {
