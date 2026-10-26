@@ -1,4 +1,5 @@
 import os
+import re
 import boto3
 from boto3.dynamodb.conditions import Key
 
@@ -31,6 +32,32 @@ class DynamoDBClient:
         # Asegura que estén ordenados por chunkIndex
         items.sort(key=lambda x: int(x['chunkIndex']))
         return [item['content'] for item in items]
+
+    def get_relevant_chunks(self, document_id: str, question: str, limit: int = 8) -> list[str]:
+        chunks = self.get_chunks(document_id)
+        question_words = self._important_words(question)
+        if not question_words:
+            return chunks[:limit]
+
+        scored_chunks = []
+        for index, chunk in enumerate(chunks):
+            chunk_words = self._important_words(chunk)
+            score = len(question_words.intersection(chunk_words))
+            scored_chunks.append((score, -index, chunk))
+
+        scored_chunks.sort(reverse=True)
+        relevant = [chunk for score, _, chunk in scored_chunks[:limit] if score > 0]
+        return relevant or chunks[:limit]
+
+    @staticmethod
+    def _important_words(text: str) -> set[str]:
+        stop_words = {
+            'para', 'como', 'donde', 'desde', 'este', 'esta', 'sobre',
+            'entre', 'cual', 'cuales', 'que', 'una', 'unos', 'las',
+            'los', 'del', 'con', 'por', 'sus', 'son'
+        }
+        words = re.findall(r'[a-záéíóúñü]{4,}', text.lower())
+        return {word for word in words if word not in stop_words}
 
     def list_documents(self) -> list[str]:
         # Retorna lista de documentIds únicos escaneando la tabla

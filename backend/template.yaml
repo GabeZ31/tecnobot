@@ -2,6 +2,12 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Tecnobot - PDF Q&A Application using AWS Serverless
 
+Parameters:
+  FrontendOrigin:
+    Type: String
+    Default: '*'
+    Description: Dominio permitido para las llamadas del frontend
+
 Globals:
   Function:
     Runtime: python3.13
@@ -11,12 +17,8 @@ Globals:
         TABLE_NAME: !Ref DocumentsTable
         BUCKET_NAME: !Ref PDFsBucket
         REGION: !Ref AWS::Region
-  Api:
-    Cors:
-      AllowMethods: "'POST,OPTIONS,GET'"
-      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-      AllowOrigin: "'*'"
-
+        CORS_ORIGIN: !Ref FrontendOrigin
+        MODEL_ID: amazon.nova-lite-v1:0
 Resources:
 
   # ─── S3: PDF Storage ───────────────────────────────────────────────────────
@@ -29,6 +31,11 @@ Resources:
             AllowedMethods: [GET, PUT, POST, DELETE, HEAD]
             AllowedOrigins: ['*']
             MaxAge: 3000
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldDocuments
+            Status: Enabled
+            ExpirationInDays: 90
 
   # ─── DynamoDB ──────────────────────────────────────────────────────────────
   DocumentsTable:
@@ -52,6 +59,24 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: prod
+      DefinitionBody:
+        openapi: 3.0.1
+        info:
+          title: Tecnobot API
+          version: 1.0
+        paths: {}
+        x-amazon-apigateway-cors:
+          allowMethods:
+            - POST
+            - OPTIONS
+            - GET
+          allowHeaders:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+          allowOrigins:
+            - !Ref FrontendOrigin
 
   # ─── Lambda: Upload ────────────────────────────────────────────────────────
   UploadFunction:
@@ -62,10 +87,15 @@ Resources:
       Handler: handler.lambda_handler
       Timeout: 60
       Policies:
-        - S3FullAccessPolicy:
-            BucketName: !Ref PDFsBucket
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DocumentsTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+              Resource: !Sub '${PDFsBucket.Arn}/*'
+            - Effect: Allow
+              Action:
+                - dynamodb:BatchWriteItem
+              Resource: !GetAtt DocumentsTable.Arn
       Events:
         UploadApi:
           Type: Api
@@ -83,9 +113,11 @@ Resources:
       Handler: handler.lambda_handler
       Timeout: 30
       Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref DocumentsTable
         - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Query
+              Resource: !GetAtt DocumentsTable.Arn
             - Effect: Allow
               Action:
                 - bedrock:InvokeModel

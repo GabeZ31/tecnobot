@@ -1,18 +1,16 @@
 import os
 import json
 import boto3
-import sys
 
 from shared.db import DynamoDBClient
 
 bedrock_client = boto3.client('bedrock-runtime', region_name=os.environ.get('REGION', 'us-east-1'))
+cors_origin = os.environ.get('CORS_ORIGIN', '*')
+model_id = os.environ.get('MODEL_ID', 'amazon.nova-lite-v1:0')
 
 def lambda_handler(event, context):
-    # Función principal de AWS Lambda para preguntar
-    
-    # Headers para CORS
     headers = {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': cors_origin,
         'Access-Control-Allow-Headers': 'Content-Type',
         'Content-Type': 'application/json'
     }
@@ -30,9 +28,15 @@ def lambda_handler(event, context):
                 'body': json.dumps({'message': 'Falta documentId o question'})
             }
             
-        # 2. Obtener chunks de DynamoDB
+        if not isinstance(question, str) or len(question.strip()) > 2000:
+            return {
+                'statusCode': 400,
+                'headers': headers,
+                'body': json.dumps({'message': 'La pregunta no puede superar 2000 caracteres'})
+            }
+
         db = DynamoDBClient()
-        chunks = db.get_chunks(document_id)
+        chunks = db.get_relevant_chunks(document_id, question)
         
         if not chunks:
             return {
@@ -41,14 +45,12 @@ def lambda_handler(event, context):
                 'body': json.dumps({'message': 'Documento no encontrado o sin texto'})
             }
             
-        # 3. Construir el contexto (máximo ~8000 caracteres)
         context_text = ""
         for chunk in chunks:
             if len(context_text) + len(chunk) > 8000:
                 break
             context_text += chunk + " "
             
-        # 4. Construir el prompt y payload para Bedrock
         prompt = f"""Eres un asistente que responde preguntas basándose ÚNICAMENTE en el siguiente documento.
 Si la respuesta no está en el documento, dilo claramente.
 
@@ -60,7 +62,6 @@ PREGUNTA:
 
 RESPUESTA:"""
 
-        # Formato de payload para amazon.nova-lite-v1:0 usando Messages API
         payload = {
             "messages": [
                 {
@@ -70,23 +71,19 @@ RESPUESTA:"""
             ]
         }
         
-        # Invocar a Bedrock
         response = bedrock_client.invoke_model(
-            modelId='amazon.nova-lite-v1:0',
+            modelId=model_id,
             contentType='application/json',
             accept='application/json',
             body=json.dumps(payload)
         )
         
-        # 5. Parsear la respuesta de Bedrock
         response_body = json.loads(response['body'].read().decode('utf-8'))
         answer = response_body.get('output', {}).get('message', {}).get('content', [{'text': ''}])[0].get('text', '')
         
-        # Fallback for other standard formats if Nova Lite format changes
         if not answer and 'content' in response_body:
              answer = response_body['content'][0].get('text', '')
-        
-        # 6. Retornar respuesta
+
         return {
             'statusCode': 200,
             'headers': headers,
