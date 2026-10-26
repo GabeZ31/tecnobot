@@ -59,8 +59,10 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: prod
+      Mode: merge
       DefinitionBody:
         openapi: 3.0.1
+        x-amazon-apigateway-import-mode: merge
         info:
           title: Tecnobot API
           version: 1.0
