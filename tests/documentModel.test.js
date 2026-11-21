@@ -60,4 +60,3 @@ test('eliminar una materia mueve sus documentos a General', () => {
   assert.deepEqual(Array.from(model.getCategories()), ['General']);
   assert.equal(model.getDocuments()[0].category, 'General');
 });
-
