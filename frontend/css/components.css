@@ -828,6 +828,20 @@ details.category-group[open] .category-header-arrow {
   max-width: 90px;
 }
 
+.category-delete-btn {
+  margin-left: 6px;
+  color: var(--dim);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.empty-category-message {
+  padding: 8px 12px 8px 28px;
+  font-size: 11px;
+  color: var(--dim);
+  font-style: italic;
+}
+
 /* Study View (Quiz Cuestionarios) */
 .study-messages {
   flex: 1;

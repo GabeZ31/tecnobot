@@ -8,9 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderSidebar = () => {
     SidebarView.render(
       DocumentModel.getDocuments(),
+      DocumentModel.getCategories(),
       DocumentModel.currentDocumentId,
       selectDocument,
-      deleteDocument
+      deleteDocument,
+      moveDocument,
+      deleteCategory
     );
   };
 
@@ -27,6 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
     DocumentModel.deleteDocument(documentData.documentId);
     renderSidebar();
     if (!DocumentModel.currentDocumentId) UploadView.showUpload();
+  };
+
+  const moveDocument = (documentId, categoryName) => {
+    DocumentModel.setDocumentCategory(documentId, categoryName);
+    renderSidebar();
+  };
+
+  const deleteCategory = categoryName => {
+    if (!confirm(`¿Eliminar la materia "${categoryName}"? Sus documentos pasarán a General.`)) return;
+    DocumentModel.deleteCategory(categoryName);
+    renderSidebar();
   };
 
   const readFileAsBase64 = file => new Promise((resolve, reject) => {

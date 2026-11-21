@@ -6,7 +6,7 @@ const DocumentModel = {
   colors: ['#fee2e2', '#dbeafe', '#dcfce7', '#fef3c7', '#f3e8ff'],
   textColors: ['#dc2626', '#2563eb', '#16a34a', '#d97706', '#7c3aed'],
 
-  saveDocument(documentId, fileName) {
+  saveDocument(documentId, fileName, categoryName = 'General') {
     const docs = this.getDocuments();
     
     // Asignar color aleatorio de la paleta
@@ -18,7 +18,7 @@ const DocumentModel = {
       date: new Date().toISOString(),
       bg: this.colors[colorIndex],
       color: this.textColors[colorIndex],
-      category: 'General'
+      category: this.categoryExists(categoryName) ? categoryName : 'General'
     };
 
     // Agregar al inicio
@@ -36,7 +36,16 @@ const DocumentModel = {
   getDocuments() {
     try {
       const stored = localStorage.getItem(this.storageKey);
-      return stored ? JSON.parse(stored) : [];
+      if (!stored) return [];
+      const documents = JSON.parse(stored);
+      if (!Array.isArray(documents)) return [];
+      return documents.map(documentData => ({
+        ...documentData,
+        category: typeof documentData.category === 'string' &&
+          documentData.category.trim()
+          ? documentData.category
+          : 'General'
+      }));
     } catch (e) {
       return [];
     }
@@ -72,9 +81,19 @@ const DocumentModel = {
         localStorage.setItem(this.categoriesKey, JSON.stringify(defaultCats));
         return defaultCats;
       }
-      return JSON.parse(stored);
+      const categories = JSON.parse(stored);
+      if (!Array.isArray(categories)) throw new Error('Invalid categories');
+      const validCategories = categories
+        .filter(category => typeof category === 'string')
+        .map(category => category.trim())
+        .filter(category => category);
+      if (!validCategories.includes('General')) validCategories.unshift('General');
+      localStorage.setItem(this.categoriesKey, JSON.stringify(validCategories));
+      return validCategories;
     } catch (e) {
-      return ['General'];
+      const defaultCategories = ['General'];
+      localStorage.setItem(this.categoriesKey, JSON.stringify(defaultCategories));
+      return defaultCategories;
     }
   },
 
@@ -82,11 +101,21 @@ const DocumentModel = {
     const trimmed = name.trim();
     if (!trimmed) return false;
     const cats = this.getCategories();
-    if (cats.includes(trimmed)) return false;
+    if (cats.some(category =>
+      this.normalizeCategoryName(category) === this.normalizeCategoryName(trimmed)
+    )) return false;
     
     cats.push(trimmed);
     localStorage.setItem(this.categoriesKey, JSON.stringify(cats));
     return true;
+  },
+
+  normalizeCategoryName(name) {
+    return name
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
   },
 
   deleteCategory(name) {
@@ -106,6 +135,7 @@ const DocumentModel = {
   },
 
   setDocumentCategory(documentId, categoryName) {
+    if (!this.categoryExists(categoryName)) return false;
     const docs = this.getDocuments();
     const doc = docs.find(d => d.documentId === documentId);
     if (doc) {
@@ -114,6 +144,10 @@ const DocumentModel = {
       return true;
     }
     return false;
+  },
+
+  categoryExists(categoryName) {
+    return this.getCategories().includes(categoryName);
   },
 
   setActive(documentId, fileName) {
