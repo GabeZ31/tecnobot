@@ -888,6 +888,9 @@
 }
 
 .utility-modal {
+  position: fixed;
+  inset: 0;
+  margin: auto;
   width: min(680px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);
   border: 1px solid var(--border);
