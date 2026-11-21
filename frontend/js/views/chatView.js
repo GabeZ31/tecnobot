@@ -1,6 +1,7 @@
 const ChatView = {
   container: document.getElementById('chat-messages'),
   inputArea: document.querySelector('.chat-input-area'),
+  quickPrompts: document.getElementById('quick-prompts'),
 
   clear() {
     this.container.innerHTML = '';
@@ -41,11 +42,32 @@ const ChatView = {
   showChat() {
     this.container.classList.remove('hidden');
     this.inputArea.classList.remove('hidden');
+    if (this.quickPrompts) this.quickPrompts.classList.remove('hidden');
   },
 
   hideChat() {
     this.container.classList.add('hidden');
     this.inputArea.classList.add('hidden');
+    if (this.quickPrompts) this.quickPrompts.classList.add('hidden');
+  },
+
+  showQuickPrompts(onSelect) {
+    if (!this.quickPrompts) return;
+    this.quickPrompts.classList.remove('hidden');
+    const prompts = [
+      'Resume los puntos clave',
+      'Explica los conceptos principales',
+      'Genera preguntas de repaso'
+    ];
+    this.quickPrompts.innerHTML = '';
+    prompts.forEach(prompt => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'quick-prompt';
+      button.textContent = prompt;
+      button.addEventListener('click', () => onSelect(prompt));
+      this.quickPrompts.appendChild(button);
+    });
   },
 
   scrollToBottom() {

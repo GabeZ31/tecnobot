@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ChatView.clear();
     ChatModel.getMessages(DocumentModel.currentDocumentId)
       .forEach(message => ChatView.showMessage(message.role, message.content));
+    ChatView.showQuickPrompts(prompt => {
+      chatInput.value = prompt;
+      chatForm.requestSubmit();
+    });
   };
 
   const loadDocument = () => {
@@ -65,7 +69,55 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!documentId) return;
     StudyView.show();
     StudyModel.load(documentId);
-    StudyView.showIntro(DocumentModel.currentFileName || 'documento.pdf', generateExam);
+    StudyView.showIntro(
+      DocumentModel.currentFileName || 'documento.pdf',
+      generateExam,
+      generateFlashcards
+    );
+  };
+
+  const generateFlashcards = async () => {
+    const documentId = DocumentModel.currentDocumentId;
+    if (!documentId) return;
+    StudyView.showLoading();
+    try {
+      const response = await ApiService.askQuestion(
+        documentId,
+        PromptService.flashcards(DocumentModel.currentFileName)
+      );
+      const json = response.answer.trim().replace(/^```json?/, '').replace(/```$/, '').trim();
+      const parsedCards = JSON.parse(json);
+      if (!parsedCards.tarjetas?.length) throw new Error('No se generaron tarjetas');
+      StudyModel.saveFlashcards(documentId, parsedCards);
+      showFlashcards();
+    } catch (error) {
+      console.error(error);
+      StudyView.showGenerationError(generateFlashcards);
+    }
+  };
+
+  const showFlashcards = () => {
+    const cards = StudyModel.loadFlashcards(DocumentModel.currentDocumentId)
+      || StudyModel.flashcards;
+    if (!cards?.length) return loadStudy();
+    StudyView.showFlashcards(
+      cards,
+      StudyModel.flashcardIndex,
+      StudyModel.flashcardFlipped,
+      () => {
+        StudyModel.flipFlashcard();
+        showFlashcards();
+      },
+      () => {
+        StudyModel.previousFlashcard();
+        showFlashcards();
+      },
+      () => {
+        StudyModel.nextFlashcard();
+        showFlashcards();
+      },
+      loadStudy
+    );
   };
 
   const generateExam = async () => {

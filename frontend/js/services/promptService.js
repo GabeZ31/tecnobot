@@ -38,5 +38,22 @@ Debes devolver ÚNICAMENTE un objeto JSON válido que cumpla estrictamente con e
 }
 Importante: 'respuesta_correcta' debe ser el índice 0, 1, 2 o 3 de la opción correcta. Evita dobles negaciones y usa opciones incorrectas creíbles.
 `;
+  },
+
+  flashcards(fileName) {
+    return `
+Actúa como profesor de repaso activo. Analiza el documento "${fileName || 'Documento'}".
+Genera exactamente 8 tarjetas de estudio útiles.
+Devuelve ÚNICAMENTE JSON válido, sin bloques markdown y sin texto adicional:
+{
+  "tarjetas": [
+    {
+      "pregunta": "Pregunta o concepto breve",
+      "respuesta": "Respuesta clara basada en el documento"
+    }
+  ]
+}
+Las preguntas deben comprobar comprensión real, no detalles triviales.
+`;
   }
 };

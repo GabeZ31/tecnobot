@@ -1,6 +1,12 @@
 const StudyView = {
   container: document.getElementById('study-messages'),
 
+  escapeHtml(value) {
+    const element = document.createElement('div');
+    element.textContent = String(value || '');
+    return element.innerHTML;
+  },
+
   show() {
     this.container.classList.remove('hidden');
   },
@@ -9,17 +15,56 @@ const StudyView = {
     this.container.classList.add('hidden');
   },
 
-  showIntro(fileName, onStart) {
+  showIntro(fileName, onStartExam, onStartFlashcards) {
     this.container.innerHTML = `
       <div class="quiz-container">
         <div class="quiz-intro-card">
           <div class="score-circle">🎓</div>
           <h2 class="quiz-title">Apartado de Estudio</h2>
-          <p class="quiz-subtitle">Genera un cuestionario de opción múltiple interactivo de 10 preguntas basado en <strong>${fileName}</strong> para evaluar tus conocimientos de forma activa.</p>
-          <button id="start-quiz-generation" class="btn-start-quiz">Generar Examen con IA</button>
+          <p class="quiz-subtitle">Practica con un examen o repasa conceptos clave extraídos de <strong>${fileName}</strong>.</p>
+          <div class="study-mode-actions">
+            <button id="start-quiz-generation" class="btn-start-quiz">Generar Examen con IA</button>
+            <button id="start-flashcards-generation" class="btn-study-secondary">Tarjetas de repaso</button>
+          </div>
         </div>
       </div>`;
-    document.getElementById('start-quiz-generation').addEventListener('click', onStart);
+    document.getElementById('start-quiz-generation').addEventListener('click', onStartExam);
+    document.getElementById('start-flashcards-generation').addEventListener('click', onStartFlashcards);
+  },
+
+  showFlashcards(cards, index, flipped, onFlip, onPrevious, onNext, onBack) {
+    const card = cards[index];
+    this.container.innerHTML = `
+      <div class="flashcard-container">
+        <div class="flashcard-header">
+          <div>
+            <h2 class="quiz-title">Tarjetas de Repaso Activo</h2>
+            <p class="quiz-subtitle">Toca la tarjeta para ver la respuesta.</p>
+          </div>
+          <span class="flashcard-counter">${index + 1} / ${cards.length}</span>
+        </div>
+        <button class="flashcard ${flipped ? 'flipped' : ''}" type="button" aria-label="Voltear tarjeta">
+          <span class="flashcard-face flashcard-front">
+            <span class="flashcard-label">Concepto o pregunta</span>
+            <strong>${this.escapeHtml(card.pregunta)}</strong>
+            <span class="flashcard-hint">Toca para ver la respuesta</span>
+          </span>
+          <span class="flashcard-face flashcard-back">
+            <span class="flashcard-label">Respuesta del PDF</span>
+            <strong>${this.escapeHtml(card.respuesta)}</strong>
+            <span class="flashcard-hint">Toca para volver</span>
+          </span>
+        </button>
+        <div class="flashcard-actions">
+          <button id="flashcard-back" class="btn-outline-sm">Volver</button>
+          <button id="flashcard-previous" class="btn-restart-quiz">Anterior</button>
+          <button id="flashcard-next" class="btn-start-quiz">Siguiente</button>
+        </div>
+      </div>`;
+    this.container.querySelector('.flashcard').addEventListener('click', onFlip);
+    document.getElementById('flashcard-back').addEventListener('click', onBack);
+    document.getElementById('flashcard-previous').addEventListener('click', onPrevious);
+    document.getElementById('flashcard-next').addEventListener('click', onNext);
   },
 
   showLoading() {
