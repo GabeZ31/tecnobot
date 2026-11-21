@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tecnobot</title>
-  <link rel="stylesheet" href="css/main.css?v=2.8">
-  <link rel="stylesheet" href="css/components.css?v=2.8">
+  <link rel="stylesheet" href="css/main.css?v=2.9">
+  <link rel="stylesheet" href="css/components.css?v=2.9">
 </head>
 <body>
   <!-- Intro Cover -->
@@ -19,6 +19,32 @@
     <div class="intro-subtitle">Asistente académico</div>
     <div class="intro-hint">Haz clic para comenzar</div>
   </div>
+
+  <dialog id="category-modal" class="category-modal">
+    <form id="category-form" class="category-modal-form">
+      <div class="category-modal-header">
+        <div>
+          <span class="category-modal-label">Organizar documentos</span>
+          <h2>Nueva materia</h2>
+        </div>
+        <button id="close-category-modal" class="category-modal-close" type="button" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <label for="new-category-input">Nombre de la nueva materia</label>
+      <input type="text" id="new-category-input" maxlength="20" placeholder="Ej. Cálculo, Historia, Programación" autocomplete="off">
+      <p id="category-modal-error" class="category-modal-error" role="alert"></p>
+      <div class="category-modal-actions">
+        <button id="cancel-category-modal" class="category-modal-cancel" type="button">Cancelar</button>
+        <button id="add-category-btn" class="category-modal-submit" type="submit">
+          Crear materia
+        </button>
+      </div>
+    </form>
+  </dialog>
 
   <div class="app">
     <!-- Mobile Overlay -->
@@ -62,31 +88,6 @@
             <!-- Lista generada por JS -->
           </div>
 
-          <dialog id="category-modal" class="category-modal">
-            <form id="category-form" class="category-modal-form">
-              <div class="category-modal-header">
-                <div>
-                  <span class="category-modal-label">Organizar documentos</span>
-                  <h2>Nueva materia</h2>
-                </div>
-                <button id="close-category-modal" class="category-modal-close" type="button" aria-label="Cerrar">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
-              </div>
-              <label for="new-category-input">Nombre de la nueva materia</label>
-              <input type="text" id="new-category-input" maxlength="20" placeholder="Ej. Cálculo, Historia, Programación" autocomplete="off">
-              <p id="category-modal-error" class="category-modal-error" role="alert"></p>
-              <div class="category-modal-actions">
-                <button id="cancel-category-modal" class="category-modal-cancel" type="button">Cancelar</button>
-                <button id="add-category-btn" class="category-modal-submit" type="submit">
-                  Crear materia
-                </button>
-              </div>
-            </form>
-          </dialog>
         </div>
       </div>
     </aside>
@@ -220,17 +221,17 @@
       introCover.addEventListener('click', startApp);
     });
   </script>
-  <script src="js/services/apiService.js?v=2.8"></script>
-  <script src="js/models/documentModel.js?v=2.8"></script>
-  <script src="js/models/chatModel.js?v=2.8"></script>
-  <script src="js/models/studyModel.js?v=2.8"></script>
-  <script src="js/services/promptService.js?v=2.8"></script>
-  <script src="js/views/markdownRenderer.js?v=2.8"></script>
-  <script src="js/views/chatView.js?v=2.8"></script>
-  <script src="js/views/studyView.js?v=2.8"></script>
-  <script src="js/views/uploadView.js?v=2.8"></script>
-  <script src="js/views/sidebarView.js?v=2.8"></script>
-  <script src="js/controllers/uploadController.js?v=2.8"></script>
-  <script src="js/controllers/chatController.js?v=2.8"></script>
+  <script src="js/services/apiService.js?v=2.9"></script>
+  <script src="js/models/documentModel.js?v=2.9"></script>
+  <script src="js/models/chatModel.js?v=2.9"></script>
+  <script src="js/models/studyModel.js?v=2.9"></script>
+  <script src="js/services/promptService.js?v=2.9"></script>
+  <script src="js/views/markdownRenderer.js?v=2.9"></script>
+  <script src="js/views/chatView.js?v=2.9"></script>
+  <script src="js/views/studyView.js?v=2.9"></script>
+  <script src="js/views/uploadView.js?v=2.9"></script>
+  <script src="js/views/sidebarView.js?v=2.9"></script>
+  <script src="js/controllers/uploadController.js?v=2.9"></script>
+  <script src="js/controllers/chatController.js?v=2.9"></script>
 </body>
 </html>
