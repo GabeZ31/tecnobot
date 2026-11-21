@@ -2,7 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const dropZone = document.getElementById('drop-zone');
   const fileInput = UploadView.fileInput;
   const newDocumentButton = document.getElementById('new-doc-btn');
-  const addCategoryButton = document.getElementById('add-category-btn');
+  const openCategoryModalButton = document.getElementById('open-category-modal');
+  const categoryModal = document.getElementById('category-modal');
+  const categoryForm = document.getElementById('category-form');
+  const closeCategoryModalButton = document.getElementById('close-category-modal');
+  const cancelCategoryModalButton = document.getElementById('cancel-category-modal');
+  const categoryModalError = document.getElementById('category-modal-error');
   const categoryInput = document.getElementById('new-category-input');
 
   const renderSidebar = () => {
@@ -109,18 +114,42 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('sidebar-close-btn')?.addEventListener('click', () => SidebarView.closeMobile());
   SidebarView.overlay?.addEventListener('click', () => SidebarView.closeMobile());
 
-  addCategoryButton?.addEventListener('click', () => {
-    const categoryName = categoryInput.value.trim();
-    if (!categoryName) return;
-    if (DocumentModel.addCategory(categoryName)) {
-      categoryInput.value = '';
-      renderSidebar();
-    } else {
-      alert('La materia ya existe o no es válida.');
-    }
+  const closeCategoryModal = () => {
+    categoryModalError.textContent = '';
+    categoryInput.value = '';
+    categoryModal.close();
+  };
+
+  openCategoryModalButton?.addEventListener('click', () => {
+    categoryModalError.textContent = '';
+    categoryInput.value = '';
+    categoryModal.showModal();
+    setTimeout(() => categoryInput.focus(), 0);
   });
-  categoryInput?.addEventListener('keypress', event => {
-    if (event.key === 'Enter') addCategoryButton.click();
+  closeCategoryModalButton?.addEventListener('click', closeCategoryModal);
+  cancelCategoryModalButton?.addEventListener('click', closeCategoryModal);
+  categoryModal?.addEventListener('click', event => {
+    if (event.target === categoryModal) closeCategoryModal();
+  });
+  categoryModal?.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeCategoryModal();
+  });
+  categoryForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    const categoryName = categoryInput.value.trim();
+    if (!categoryName) {
+      categoryModalError.textContent = 'Escribe un nombre para la materia.';
+      categoryInput.focus();
+      return;
+    }
+    if (!DocumentModel.addCategory(categoryName)) {
+      categoryModalError.textContent = 'Ya existe una materia con ese nombre.';
+      categoryInput.select();
+      return;
+    }
+    closeCategoryModal();
+    renderSidebar();
   });
 
   newDocumentButton.addEventListener('click', () => {

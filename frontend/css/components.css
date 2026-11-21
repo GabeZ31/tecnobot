@@ -596,52 +596,165 @@
   transform: scale(1.05);
 }
 
-/* Create Category Form */
-.create-category-container {
-  display: flex;
-  gap: 8px;
+/* Create Category */
+.btn-create-category {
+  width: calc(100% - 20px);
   margin: 8px 10px 14px;
-}
-
-.create-category-container input {
-  flex: 1;
-  background-color: #f7f8fa;
+  min-height: 42px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 12px;
-  outline: none;
-  transition: all 0.2s;
-}
-
-.create-category-container input:focus {
-  border-color: var(--accent);
-  background-color: #ffffff;
-}
-
-.btn-add-category {
-  width: 32px;
-  height: 32px;
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--dim);
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 650;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
-.btn-add-category svg {
-  width: 14px;
-  height: 14px;
+.btn-create-category svg {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
 }
 
-.btn-add-category:hover {
-  background-color: var(--accent);
+.btn-create-category:hover {
+  border-color: #cbd5f5;
+  background: #f8faff;
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.category-modal {
+  width: min(420px, calc(100vw - 32px));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 0;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
+}
+
+.category-modal::backdrop {
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(3px);
+}
+
+.category-modal-form {
+  padding: 22px;
+}
+
+.category-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.category-modal-label {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--dim);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.category-modal h2 {
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.category-modal-close {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.category-modal-close:hover {
+  background: #f1f5f9;
+  color: var(--text);
+}
+
+.category-modal-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.category-modal-form label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.category-modal-form input {
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.category-modal-form input:focus {
   border-color: var(--accent);
-  color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(58, 110, 245, 0.12);
+}
+
+.category-modal-error {
+  min-height: 18px;
+  margin-top: 6px;
+  color: var(--error);
+  font-size: 12px;
+}
+
+.category-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.category-modal-cancel,
+.category-modal-submit {
+  min-height: 40px;
+  border-radius: 9px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.category-modal-cancel {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.category-modal-submit {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.category-modal-submit:hover {
+  background: var(--accent-hover);
 }
 
 /* Improved Collapsible Categories */
