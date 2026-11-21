@@ -629,18 +629,25 @@
 }
 
 .category-modal {
+  position: fixed;
+  inset: 0;
+  margin: auto;
   width: min(420px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 0;
   background: var(--surface);
   color: var(--text);
   box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
+  animation: categoryModalEnter 0.18s ease-out;
 }
 
 .category-modal::backdrop {
   background: rgba(15, 23, 42, 0.42);
   backdrop-filter: blur(3px);
+  animation: categoryBackdropEnter 0.18s ease-out;
 }
 
 .category-modal-form {
@@ -755,6 +762,22 @@
 
 .category-modal-submit:hover {
   background: var(--accent-hover);
+}
+
+@keyframes categoryModalEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes categoryBackdropEnter {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Improved Collapsible Categories */
@@ -1225,6 +1248,51 @@ details.category-group[open] .category-header-arrow {
 
 /* Mobile Overrides (under 768px) */
 @media (max-width: 768px) {
+  .btn-create-category {
+    min-height: 44px;
+  }
+
+  .category-modal {
+    inset: auto 0 0;
+    width: 100%;
+    max-width: none;
+    max-height: calc(100dvh - 16px);
+    margin: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 18px 18px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .category-modal-form {
+    padding: 18px 16px 12px;
+  }
+
+  .category-modal-header {
+    margin-bottom: 16px;
+  }
+
+  .category-modal-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  .category-modal-form input {
+    height: 46px;
+    font-size: 16px;
+  }
+
+  .category-modal-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .category-modal-cancel,
+  .category-modal-submit {
+    min-height: 46px;
+  }
+
   .btn-sidebar-close {
     display: flex; /* Show X button on mobile */
   }
