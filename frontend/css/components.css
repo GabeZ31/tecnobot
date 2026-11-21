@@ -1254,8 +1254,8 @@ details.category-group[open] .category-header-arrow {
 
   .category-modal {
     inset: 0;
-    width: calc(100vw - 32px);
-    max-width: 420px;
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
     max-height: calc(100dvh - 32px);
     margin: auto;
     border: 1px solid var(--border);
