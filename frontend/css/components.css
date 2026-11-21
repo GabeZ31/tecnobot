@@ -598,7 +598,9 @@
 
 /* Create Category Form */
 .create-category-container {
-  display: none !important;
+  display: flex;
+  gap: 8px;
+  margin: 8px 10px 14px;
 }
 
 .create-category-container input {
