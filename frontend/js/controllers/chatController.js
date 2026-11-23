@@ -4,6 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendButton = document.getElementById('send-btn');
   const tabButtons = document.querySelectorAll('.tab-btn');
   const chatTab = document.querySelector('[data-tab="chat"]');
+  const returnToChatButton = document.getElementById('return-to-chat-btn');
+
+  const showChatAfterStudy = () => {
+    ChatView.showChat();
+    StudyView.hide();
+    if (returnToChatButton) returnToChatButton.classList.add('hidden');
+    showHistory();
+  };
+
+  const showStudyMode = () => {
+    ChatView.hideChat();
+    if (returnToChatButton) returnToChatButton.classList.remove('hidden');
+  };
 
   const showHistory = () => {
     ChatView.clear();
@@ -18,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadDocument = () => {
     const documentId = DocumentModel.currentDocumentId;
     if (!documentId) return;
+    if (returnToChatButton) returnToChatButton.classList.add('hidden');
     const history = ChatModel.getMessages(documentId);
     if (!history.length) {
       const welcome = 'Hola. Ya terminé de leer tu PDF, pregúntame lo que necesites.';
@@ -209,6 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (action === 'summary') {
       ChatView.showChat();
       StudyView.hide();
+      if (returnToChatButton) returnToChatButton.classList.add('hidden');
       ChatView.clear();
       ChatView.showMessage('user', PromptService.summary());
       askQuestion(PromptService.summary(), false);
@@ -216,18 +231,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (action === 'exam') {
-      ChatView.hideChat();
+      showStudyMode();
       loadStudy();
       generateExam();
       return;
     }
 
     if (action === 'flashcards') {
-      ChatView.hideChat();
+      showStudyMode();
       loadStudy();
       generateFlashcards();
     }
   });
+  returnToChatButton?.addEventListener('click', showChatAfterStudy);
   chatForm.addEventListener('submit', sendQuestion);
   tabButtons.forEach(button => button.addEventListener('click', handleTabChange));
   document.getElementById('export-chat-btn')?.addEventListener('click', exportChat);

@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tecnobot</title>
-  <link rel="stylesheet" href="css/main.css?v=3.7">
-  <link rel="stylesheet" href="css/components.css?v=3.7">
+  <link rel="stylesheet" href="css/main.css?v=3.8">
+  <link rel="stylesheet" href="css/components.css?v=3.8">
 </head>
 <body>
   <!-- Intro Cover -->
@@ -202,6 +202,12 @@
             <span id="active-doc-name" class="doc-name">documento.pdf</span>
             <span class="ready-dot" aria-hidden="true"></span>
           </div>
+          <button id="return-to-chat-btn" class="return-to-chat-btn hidden" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Volver al chat</span>
+          </button>
           <button id="export-chat-btn" class="btn-outline-sm hidden-mobile">Exportar chat</button>
         </header>
 
@@ -311,20 +317,20 @@
       introCover.addEventListener('click', startApp);
     });
   </script>
-  <script src="js/services/apiService.js?v=3.7"></script>
-  <script src="js/services/utilityService.js?v=3.7"></script>
-  <script src="js/models/documentModel.js?v=3.7"></script>
-  <script src="js/models/chatModel.js?v=3.7"></script>
-  <script src="js/models/studyModel.js?v=3.7"></script>
-  <script src="js/services/promptService.js?v=3.7"></script>
-  <script src="js/views/markdownRenderer.js?v=3.7"></script>
-  <script src="js/views/chatView.js?v=3.7"></script>
-  <script src="js/views/studyView.js?v=3.7"></script>
-  <script src="js/views/uploadView.js?v=3.7"></script>
-  <script src="js/views/sidebarView.js?v=3.7"></script>
-  <script src="js/views/utilityView.js?v=3.7"></script>
-  <script src="js/controllers/uploadController.js?v=3.7"></script>
-  <script src="js/controllers/utilityController.js?v=3.7"></script>
-  <script src="js/controllers/chatController.js?v=3.7"></script>
+  <script src="js/services/apiService.js?v=3.8"></script>
+  <script src="js/services/utilityService.js?v=3.8"></script>
+  <script src="js/models/documentModel.js?v=3.8"></script>
+  <script src="js/models/chatModel.js?v=3.8"></script>
+  <script src="js/models/studyModel.js?v=3.8"></script>
+  <script src="js/services/promptService.js?v=3.8"></script>
+  <script src="js/views/markdownRenderer.js?v=3.8"></script>
+  <script src="js/views/chatView.js?v=3.8"></script>
+  <script src="js/views/studyView.js?v=3.8"></script>
+  <script src="js/views/uploadView.js?v=3.8"></script>
+  <script src="js/views/sidebarView.js?v=3.8"></script>
+  <script src="js/views/utilityView.js?v=3.8"></script>
+  <script src="js/controllers/uploadController.js?v=3.8"></script>
+  <script src="js/controllers/utilityController.js?v=3.8"></script>
+  <script src="js/controllers/chatController.js?v=3.8"></script>
 </body>
 </html>
