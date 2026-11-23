@@ -60,6 +60,10 @@ Resources:
     Properties:
       StageName: prod
       Mode: merge
+      Cors:
+        AllowMethods: "'POST,OPTIONS,GET'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+        AllowOrigin: !Sub "'${FrontendOrigin}'"
       DefinitionBody:
         openapi: 3.0.1
         x-amazon-apigateway-import-mode: merge
@@ -67,18 +71,6 @@ Resources:
           title: Tecnobot API
           version: 1.0
         paths: {}
-        x-amazon-apigateway-cors:
-          allowMethods:
-            - POST
-            - OPTIONS
-            - GET
-          allowHeaders:
-            - Content-Type
-            - X-Amz-Date
-            - Authorization
-            - X-Api-Key
-          allowOrigins:
-            - !Ref FrontendOrigin
 
   # ─── Lambda: Upload ────────────────────────────────────────────────────────
   UploadFunction:

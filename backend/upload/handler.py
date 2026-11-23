@@ -28,7 +28,8 @@ def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 100) -> list[st
 def lambda_handler(event, context):
     headers = {
         'Access-Control-Allow-Origin': cors_origin,
-        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key',
+        'Access-Control-Allow-Methods': 'POST,OPTIONS',
         'Content-Type': 'application/json'
     }
     
