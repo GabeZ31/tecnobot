@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tecnobot</title>
-  <link rel="stylesheet" href="css/main.css?v=3.3">
-  <link rel="stylesheet" href="css/components.css?v=3.3">
+  <link rel="stylesheet" href="css/main.css?v=3.4">
+  <link rel="stylesheet" href="css/components.css?v=3.4">
 </head>
 <body>
   <!-- Intro Cover -->
@@ -192,13 +192,15 @@
                 <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
             </button>
-            <div class="active-doc-badge">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="doc-icon">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-              </svg>
-              <span id="active-doc-name" class="doc-name">documento.pdf</span>
-            </div>
+            <span class="chat-context-title">Documento activo</span>
+          </div>
+          <div class="pdf-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="doc-icon">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <span id="active-doc-name" class="doc-name">documento.pdf</span>
+            <span class="ready-dot" aria-hidden="true"></span>
           </div>
           <button id="export-chat-btn" class="btn-outline-sm hidden-mobile">Exportar chat</button>
         </header>
@@ -241,7 +243,46 @@
 
         <!-- Input Area -->
         <div class="chat-input-area">
+          <div id="chat-utility-panel" class="chat-utility-panel hidden" role="dialog" aria-label="Utilidades">
+            <div class="chat-utility-header">
+              <strong>Utilidades</strong>
+              <button id="close-chat-utility-panel" type="button" aria-label="Cerrar utilidades">&times;</button>
+            </div>
+            <div class="chat-utility-grid">
+              <button class="chat-utility-card" type="button" data-utility="merge">
+                <span class="chat-utility-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7v8a2 2 0 0 0 2 2h6"></path><path d="M8 7V5a2 2 0 0 1 2-2h4l4 4v8a2 2 0 0 1-2 2h-2"></path></svg>
+                </span>
+                <b>Unir PDFs</b>
+                <small>Combina varios documentos.</small>
+              </button>
+              <button class="chat-utility-card" type="button" data-utility="images">
+                <span class="chat-utility-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg>
+                </span>
+                <b>Imágenes a PDF</b>
+                <small>Convierte JPG o PNG.</small>
+              </button>
+              <button class="chat-utility-card" type="button" data-utility="apa">
+                <span class="chat-utility-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </span>
+                <b>Citas APA 7</b>
+                <small>Crea referencias completas.</small>
+              </button>
+              <button class="chat-utility-card" type="button" data-utility="diagrams">
+                <span class="chat-utility-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2"></circle><circle cx="5" cy="19" r="2"></circle><circle cx="19" cy="19" r="2"></circle><path d="m10.5 6.5-4 10.5M13.5 6.5l4 10.5M7 19h10"></path></svg>
+                </span>
+                <b>Diagramas</b>
+                <small>Crea y descarga SVG.</small>
+              </button>
+            </div>
+          </div>
           <form id="chat-form" class="chat-form">
+            <button id="open-chat-utility-panel" class="chat-utility-toggle" type="button" aria-expanded="false" aria-controls="chat-utility-panel" aria-label="Abrir utilidades">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
             <input type="text" id="chat-input" class="chat-input" placeholder="Escribe una pregunta sobre el documento..." autocomplete="off">
             <button type="submit" id="send-btn" class="btn-send">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -273,20 +314,20 @@
       introCover.addEventListener('click', startApp);
     });
   </script>
-  <script src="js/services/apiService.js?v=3.3"></script>
-  <script src="js/services/utilityService.js?v=3.3"></script>
-  <script src="js/models/documentModel.js?v=3.3"></script>
-  <script src="js/models/chatModel.js?v=3.3"></script>
-  <script src="js/models/studyModel.js?v=3.3"></script>
-  <script src="js/services/promptService.js?v=3.3"></script>
-  <script src="js/views/markdownRenderer.js?v=3.3"></script>
-  <script src="js/views/chatView.js?v=3.3"></script>
-  <script src="js/views/studyView.js?v=3.3"></script>
-  <script src="js/views/uploadView.js?v=3.3"></script>
-  <script src="js/views/sidebarView.js?v=3.3"></script>
-  <script src="js/views/utilityView.js?v=3.3"></script>
-  <script src="js/controllers/uploadController.js?v=3.3"></script>
-  <script src="js/controllers/utilityController.js?v=3.3"></script>
-  <script src="js/controllers/chatController.js?v=3.3"></script>
+  <script src="js/services/apiService.js?v=3.4"></script>
+  <script src="js/services/utilityService.js?v=3.4"></script>
+  <script src="js/models/documentModel.js?v=3.4"></script>
+  <script src="js/models/chatModel.js?v=3.4"></script>
+  <script src="js/models/studyModel.js?v=3.4"></script>
+  <script src="js/services/promptService.js?v=3.4"></script>
+  <script src="js/views/markdownRenderer.js?v=3.4"></script>
+  <script src="js/views/chatView.js?v=3.4"></script>
+  <script src="js/views/studyView.js?v=3.4"></script>
+  <script src="js/views/uploadView.js?v=3.4"></script>
+  <script src="js/views/sidebarView.js?v=3.4"></script>
+  <script src="js/views/utilityView.js?v=3.4"></script>
+  <script src="js/controllers/uploadController.js?v=3.4"></script>
+  <script src="js/controllers/utilityController.js?v=3.4"></script>
+  <script src="js/controllers/chatController.js?v=3.4"></script>
 </body>
 </html>

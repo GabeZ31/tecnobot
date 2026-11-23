@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const content = document.getElementById('utilities-content');
   const modal = document.getElementById('utility-modal');
   const closeButton = document.getElementById('close-utility-modal');
+  const utilityPanel = document.getElementById('chat-utility-panel');
+  const openUtilityPanelButton = document.getElementById('open-chat-utility-panel');
+  const closeUtilityPanelButton = document.getElementById('close-chat-utility-panel');
   let mergeFiles = [];
   let imageFiles = [];
   let diagramSvg = '';
@@ -17,6 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', () => openUtility(button.dataset.utility));
   });
 
+  const closeChatUtilityPanel = () => {
+    if (!utilityPanel) return;
+    utilityPanel.classList.add('hidden');
+    openUtilityPanelButton?.setAttribute('aria-expanded', 'false');
+  };
+
+  openUtilityPanelButton?.addEventListener('click', () => {
+    if (!utilityPanel) return;
+    const isOpen = utilityPanel.classList.toggle('hidden');
+    openUtilityPanelButton.setAttribute('aria-expanded', String(!isOpen));
+  });
+  closeUtilityPanelButton?.addEventListener('click', closeChatUtilityPanel);
+
   closeButton.addEventListener('click', () => UtilityView.close());
   modal.addEventListener('cancel', event => {
     event.preventDefault();
@@ -28,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openUtility(type) {
     SidebarView.closeMobile();
+    closeChatUtilityPanel();
     const activeDocumentName = DocumentModel.currentFileName || 'Documento';
     if (type === 'merge') {
       UtilityView.open('Unir PDFs');
