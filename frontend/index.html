@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tecnobot</title>
-  <link rel="stylesheet" href="css/main.css?v=3.6">
-  <link rel="stylesheet" href="css/components.css?v=3.6">
+  <link rel="stylesheet" href="css/main.css?v=3.7">
+  <link rel="stylesheet" href="css/components.css?v=3.7">
 </head>
 <body>
   <!-- Intro Cover -->
@@ -225,6 +225,27 @@
               <button id="close-chat-utility-panel" type="button" aria-label="Cerrar utilidades">&times;</button>
             </div>
             <div class="chat-utility-grid">
+              <button class="chat-utility-card" type="button" data-chat-action="summary">
+                <span class="chat-utility-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"></path><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"></path></svg>
+                </span>
+                <b>Resumen</b>
+                <small>Lo esencial del PDF.</small>
+              </button>
+              <button class="chat-utility-card" type="button" data-chat-action="exam">
+                <span class="chat-utility-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.3A2.6 2.6 0 1 1 12 12.5V14"></path><path d="M12 17.2h.01"></path></svg>
+                </span>
+                <b>Examen</b>
+                <small>Practica sobre el PDF.</small>
+              </button>
+              <button class="chat-utility-card" type="button" data-chat-action="flashcards">
+                <span class="chat-utility-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="13" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path></svg>
+                </span>
+                <b>Tarjetas de estudio</b>
+                <small>Repasa concepto y definición.</small>
+              </button>
               <button class="chat-utility-card" type="button" data-utility="merge">
                 <span class="chat-utility-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7v8a2 2 0 0 0 2 2h6"></path><path d="M8 7V5a2 2 0 0 1 2-2h4l4 4v8a2 2 0 0 1-2 2h-2"></path></svg>
@@ -290,20 +311,20 @@
       introCover.addEventListener('click', startApp);
     });
   </script>
-  <script src="js/services/apiService.js?v=3.6"></script>
-  <script src="js/services/utilityService.js?v=3.6"></script>
-  <script src="js/models/documentModel.js?v=3.6"></script>
-  <script src="js/models/chatModel.js?v=3.6"></script>
-  <script src="js/models/studyModel.js?v=3.6"></script>
-  <script src="js/services/promptService.js?v=3.6"></script>
-  <script src="js/views/markdownRenderer.js?v=3.6"></script>
-  <script src="js/views/chatView.js?v=3.6"></script>
-  <script src="js/views/studyView.js?v=3.6"></script>
-  <script src="js/views/uploadView.js?v=3.6"></script>
-  <script src="js/views/sidebarView.js?v=3.6"></script>
-  <script src="js/views/utilityView.js?v=3.6"></script>
-  <script src="js/controllers/uploadController.js?v=3.6"></script>
-  <script src="js/controllers/utilityController.js?v=3.6"></script>
-  <script src="js/controllers/chatController.js?v=3.6"></script>
+  <script src="js/services/apiService.js?v=3.7"></script>
+  <script src="js/services/utilityService.js?v=3.7"></script>
+  <script src="js/models/documentModel.js?v=3.7"></script>
+  <script src="js/models/chatModel.js?v=3.7"></script>
+  <script src="js/models/studyModel.js?v=3.7"></script>
+  <script src="js/services/promptService.js?v=3.7"></script>
+  <script src="js/views/markdownRenderer.js?v=3.7"></script>
+  <script src="js/views/chatView.js?v=3.7"></script>
+  <script src="js/views/studyView.js?v=3.7"></script>
+  <script src="js/views/uploadView.js?v=3.7"></script>
+  <script src="js/views/sidebarView.js?v=3.7"></script>
+  <script src="js/views/utilityView.js?v=3.7"></script>
+  <script src="js/controllers/uploadController.js?v=3.7"></script>
+  <script src="js/controllers/utilityController.js?v=3.7"></script>
+  <script src="js/controllers/chatController.js?v=3.7"></script>
 </body>
 </html>

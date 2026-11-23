@@ -202,6 +202,32 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   document.addEventListener('documentLoaded', loadDocument);
+  document.addEventListener('tecnobot:study-action', event => {
+    const action = event.detail?.action;
+    if (!DocumentModel.currentDocumentId) return;
+
+    if (action === 'summary') {
+      ChatView.showChat();
+      StudyView.hide();
+      ChatView.clear();
+      ChatView.showMessage('user', PromptService.summary());
+      askQuestion(PromptService.summary(), false);
+      return;
+    }
+
+    if (action === 'exam') {
+      ChatView.hideChat();
+      loadStudy();
+      generateExam();
+      return;
+    }
+
+    if (action === 'flashcards') {
+      ChatView.hideChat();
+      loadStudy();
+      generateFlashcards();
+    }
+  });
   chatForm.addEventListener('submit', sendQuestion);
   tabButtons.forEach(button => button.addEventListener('click', handleTabChange));
   document.getElementById('export-chat-btn')?.addEventListener('click', exportChat);

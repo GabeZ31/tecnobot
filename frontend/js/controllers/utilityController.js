@@ -19,6 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-utility]').forEach(button => {
     button.addEventListener('click', () => openUtility(button.dataset.utility));
   });
+  document.querySelectorAll('[data-chat-action]').forEach(button => {
+    button.addEventListener('click', () => {
+      closeChatUtilityPanel();
+      document.dispatchEvent(new CustomEvent('tecnobot:study-action', {
+        detail: { action: button.dataset.chatAction }
+      }));
+    });
+  });
 
   const closeChatUtilityPanel = () => {
     if (!utilityPanel) return;
