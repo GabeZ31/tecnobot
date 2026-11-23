@@ -109,7 +109,7 @@ const SidebarView = {
   createEmptyMessage() {
     const message = document.createElement('div');
     message.textContent = 'No hay documentos subidos';
-    message.style.cssText = 'font-size:12px;color:var(--dim);padding:12px;text-align:center;font-style:italic';
+    message.className = 'sidebar-empty-message';
     return message;
   },
 

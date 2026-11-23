@@ -31,7 +31,8 @@ def lambda_handler(event, context):
         'Access-Control-Allow-Origin': cors_origin,
         'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key',
         'Access-Control-Allow-Methods': 'POST,OPTIONS',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store'
     }
 
     request_headers = event.get('headers') or {}
