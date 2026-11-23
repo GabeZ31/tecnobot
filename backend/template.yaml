@@ -5,7 +5,7 @@ Description: Tecnobot - PDF Q&A Application using AWS Serverless
 Parameters:
   FrontendOrigin:
     Type: String
-    Default: '*'
+    Default: 'https://tecno-bot.netlify.app'
     Description: Dominio permitido para las llamadas del frontend
 
 Globals:
@@ -25,12 +25,6 @@ Resources:
   PDFsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      CorsConfiguration:
-        CorsRules:
-          - AllowedHeaders: ['*']
-            AllowedMethods: [GET, PUT, POST, DELETE, HEAD]
-            AllowedOrigins: ['*']
-            MaxAge: 3000
       LifecycleConfiguration:
         Rules:
           - Id: DeleteOldDocuments
@@ -64,6 +58,11 @@ Resources:
         AllowMethods: "'POST,OPTIONS,GET'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
         AllowOrigin: !Sub "'${FrontendOrigin}'"
+      MethodSettings:
+        - ResourcePath: '/*'
+          HttpMethod: '*'
+          ThrottlingBurstLimit: 20
+          ThrottlingRateLimit: 10
       DefinitionBody:
         openapi: 3.0.1
         x-amazon-apigateway-import-mode: merge
@@ -115,7 +114,7 @@ Resources:
             - Effect: Allow
               Action:
                 - bedrock:InvokeModel
-              Resource: '*'
+              Resource: !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/amazon.nova-lite-v1:0'
       Events:
         AskApi:
           Type: Api

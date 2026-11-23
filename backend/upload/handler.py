@@ -5,12 +5,13 @@ import base64
 import binascii
 import boto3
 import io
+import traceback
 from PyPDF2 import PdfReader
 
 from shared.db import DynamoDBClient
 
 s3_client = boto3.client('s3')
-cors_origin = os.environ.get('CORS_ORIGIN', '*')
+cors_origin = os.environ.get('CORS_ORIGIN', 'https://tecno-bot.netlify.app')
 
 def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 100) -> list[str]:
     # Divide el texto en chunks con solapamiento
@@ -32,9 +33,26 @@ def lambda_handler(event, context):
         'Access-Control-Allow-Methods': 'POST,OPTIONS',
         'Content-Type': 'application/json'
     }
+
+    request_headers = event.get('headers') or {}
+    origin = request_headers.get('origin') or request_headers.get('Origin')
+    if origin and origin != cors_origin:
+        return {
+            'statusCode': 403,
+            'headers': headers,
+            'body': json.dumps({'message': 'Origen no permitido'})
+        }
     
     try:
         body = json.loads(event.get('body', '{}'))
+    except (json.JSONDecodeError, TypeError):
+        return {
+            'statusCode': 400,
+            'headers': headers,
+            'body': json.dumps({'message': 'JSON no válido'})
+        }
+
+    try:
         file_name = body.get('fileName')
         file_content_base64 = body.get('fileContent')
         
@@ -115,12 +133,12 @@ def lambda_handler(event, context):
             })
         }
         
-    except Exception as e:
-        # Manejo de errores
+    except Exception:
+        traceback.print_exc()
         return {
             'statusCode': 500,
             'headers': headers,
             'body': json.dumps({
-                'message': f"Error interno: {str(e)}"
+                'message': 'No se pudo procesar el documento'
             })
         }

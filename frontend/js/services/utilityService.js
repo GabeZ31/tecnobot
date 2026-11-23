@@ -6,6 +6,8 @@ const UtilityService = {
     this.scriptPromises[key] = new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = url;
+      script.crossOrigin = 'anonymous';
+      script.referrerPolicy = 'no-referrer';
       script.onload = resolve;
       script.onerror = () => reject(new Error(`No se pudo cargar ${key}`));
       document.head.appendChild(script);
@@ -21,7 +23,7 @@ const UtilityService = {
 
   async getMermaid() {
     if (window.mermaid) return window.mermaid;
-    await this.loadScript('mermaid', 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js');
+    await this.loadScript('mermaid', 'https://cdn.jsdelivr.net/npm/mermaid@10.9.4/dist/mermaid.min.js');
     window.mermaid.initialize({
       startOnLoad: false,
       theme: 'base',

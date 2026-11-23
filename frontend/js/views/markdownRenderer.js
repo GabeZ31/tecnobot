@@ -1,16 +1,19 @@
 const MarkdownRenderer = {
   render(text) {
-    const escapeHtml = (value) => value
+    const escapeHtml = (value) => String(value || '')
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
 
-    const parseInline = (value) => value
-      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>');
+    const parseInline = (value) => {
+      const escaped = escapeHtml(value);
+      return escaped
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>');
+    };
 
     const lines = text.split(/\r?\n/);
     let html = '';

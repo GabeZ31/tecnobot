@@ -1,11 +1,13 @@
 import os
 import json
+import re
+import traceback
 import boto3
 
 from shared.db import DynamoDBClient
 
 bedrock_client = boto3.client('bedrock-runtime', region_name=os.environ.get('REGION', 'us-east-1'))
-cors_origin = os.environ.get('CORS_ORIGIN', '*')
+cors_origin = os.environ.get('CORS_ORIGIN', 'https://tecno-bot.netlify.app')
 model_id = os.environ.get('MODEL_ID', 'amazon.nova-lite-v1:0')
 
 def lambda_handler(event, context):
@@ -15,10 +17,26 @@ def lambda_handler(event, context):
         'Access-Control-Allow-Methods': 'POST,OPTIONS',
         'Content-Type': 'application/json'
     }
+
+    request_headers = event.get('headers') or {}
+    origin = request_headers.get('origin') or request_headers.get('Origin')
+    if origin and origin != cors_origin:
+        return {
+            'statusCode': 403,
+            'headers': headers,
+            'body': json.dumps({'message': 'Origen no permitido'})
+        }
     
     try:
-        # 1. Parsear el body JSON
         body = json.loads(event.get('body', '{}'))
+    except (json.JSONDecodeError, TypeError):
+        return {
+            'statusCode': 400,
+            'headers': headers,
+            'body': json.dumps({'message': 'JSON no válido'})
+        }
+
+    try:
         document_id = body.get('documentId')
         question = body.get('question')
         
@@ -27,6 +45,15 @@ def lambda_handler(event, context):
                 'statusCode': 400,
                 'headers': headers,
                 'body': json.dumps({'message': 'Falta documentId o question'})
+            }
+        if not isinstance(document_id, str) or not re.fullmatch(
+            r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}',
+            document_id
+        ):
+            return {
+                'statusCode': 400,
+                'headers': headers,
+                'body': json.dumps({'message': 'documentId no válido'})
             }
             
         if not isinstance(question, str) or len(question.strip()) > 2000:
@@ -94,12 +121,12 @@ RESPUESTA:"""
             })
         }
         
-    except Exception as e:
-        # Manejo de errores
+    except Exception:
+        traceback.print_exc()
         return {
             'statusCode': 500,
             'headers': headers,
             'body': json.dumps({
-                'message': f"Error interno: {str(e)}"
+                'message': 'No se pudo obtener una respuesta'
             })
         }
