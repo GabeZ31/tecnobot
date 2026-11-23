@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tecnobot</title>
-  <link rel="stylesheet" href="css/main.css?v=3.4">
-  <link rel="stylesheet" href="css/components.css?v=3.4">
+  <link rel="stylesheet" href="css/main.css?v=3.6">
+  <link rel="stylesheet" href="css/components.css?v=3.6">
 </head>
 <body>
   <!-- Intro Cover -->
@@ -192,7 +192,7 @@
                 <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
             </button>
-            <span class="chat-context-title">Documento activo</span>
+            <h1 id="chat-context-title" class="chat-context-title">Tecnobot</h1>
           </div>
           <div class="pdf-chip">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="doc-icon">
@@ -204,30 +204,6 @@
           </div>
           <button id="export-chat-btn" class="btn-outline-sm hidden-mobile">Exportar chat</button>
         </header>
-
-        <!-- Tabs -->
-        <div class="chat-tabs">
-          <button class="tab-btn active" data-tab="chat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tab-icon">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-            Chat
-          </button>
-          <button class="tab-btn" data-tab="summary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tab-icon">
-              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-            </svg>
-            Resumen
-          </button>
-          <button class="tab-btn" data-tab="study">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tab-icon">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-              <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
-            </svg>
-            Estudiar
-          </button>
-        </div>
 
         <!-- Chat Area -->
         <div id="chat-messages" class="chat-messages">
@@ -314,20 +290,20 @@
       introCover.addEventListener('click', startApp);
     });
   </script>
-  <script src="js/services/apiService.js?v=3.4"></script>
-  <script src="js/services/utilityService.js?v=3.4"></script>
-  <script src="js/models/documentModel.js?v=3.4"></script>
-  <script src="js/models/chatModel.js?v=3.4"></script>
-  <script src="js/models/studyModel.js?v=3.4"></script>
-  <script src="js/services/promptService.js?v=3.4"></script>
-  <script src="js/views/markdownRenderer.js?v=3.4"></script>
-  <script src="js/views/chatView.js?v=3.4"></script>
-  <script src="js/views/studyView.js?v=3.4"></script>
-  <script src="js/views/uploadView.js?v=3.4"></script>
-  <script src="js/views/sidebarView.js?v=3.4"></script>
-  <script src="js/views/utilityView.js?v=3.4"></script>
-  <script src="js/controllers/uploadController.js?v=3.4"></script>
-  <script src="js/controllers/utilityController.js?v=3.4"></script>
-  <script src="js/controllers/chatController.js?v=3.4"></script>
+  <script src="js/services/apiService.js?v=3.6"></script>
+  <script src="js/services/utilityService.js?v=3.6"></script>
+  <script src="js/models/documentModel.js?v=3.6"></script>
+  <script src="js/models/chatModel.js?v=3.6"></script>
+  <script src="js/models/studyModel.js?v=3.6"></script>
+  <script src="js/services/promptService.js?v=3.6"></script>
+  <script src="js/views/markdownRenderer.js?v=3.6"></script>
+  <script src="js/views/chatView.js?v=3.6"></script>
+  <script src="js/views/studyView.js?v=3.6"></script>
+  <script src="js/views/uploadView.js?v=3.6"></script>
+  <script src="js/views/sidebarView.js?v=3.6"></script>
+  <script src="js/views/utilityView.js?v=3.6"></script>
+  <script src="js/controllers/uploadController.js?v=3.6"></script>
+  <script src="js/controllers/utilityController.js?v=3.6"></script>
+  <script src="js/controllers/chatController.js?v=3.6"></script>
 </body>
 </html>

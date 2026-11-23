@@ -7,6 +7,7 @@ const UploadView = {
   buttonLabel: document.getElementById('upload-btn-label'),
   errorMessage: document.getElementById('upload-error'),
   activeDocumentName: document.getElementById('active-doc-name'),
+  contextTitle: document.getElementById('chat-context-title'),
 
   showError(message) {
     this.errorMessage.textContent = message;
@@ -44,6 +45,11 @@ const UploadView = {
     this.uploadSection.classList.add('hidden');
     this.chatSection.classList.remove('hidden');
     this.activeDocumentName.textContent = documentName;
+    if (this.contextTitle) {
+      const activeDocument = DocumentModel.getDocuments()
+        .find(documentData => documentData.documentId === DocumentModel.currentDocumentId);
+      this.contextTitle.textContent = activeDocument?.category || 'Documento activo';
+    }
     document.dispatchEvent(new CustomEvent('documentLoaded'));
   },
 

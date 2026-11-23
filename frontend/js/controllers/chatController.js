@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!documentId) return;
     const history = ChatModel.getMessages(documentId);
     if (!history.length) {
-      const welcome = '¡Hola! He procesado tu documento. ¿Qué te gustaría saber sobre él?';
+      const welcome = 'Hola. Ya terminé de leer tu PDF, pregúntame lo que necesites.';
       ChatModel.addMessage(documentId, 'bot', welcome);
     }
     showHistory();
