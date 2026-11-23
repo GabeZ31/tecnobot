@@ -55,5 +55,37 @@ Devuelve ÚNICAMENTE JSON válido, sin bloques markdown y sin texto adicional:
 }
 Las preguntas deben comprobar comprensión real, no detalles triviales.
 `;
+  },
+
+  apa(fileName) {
+    return `
+Analiza este PDF y extrae únicamente los datos bibliográficos necesarios para citar el documento en APA 7.
+Devuelve ÚNICAMENTE un objeto JSON válido, sin texto fuera del JSON y sin bloques de código:
+{
+  "autor": "Apellido, Inicial(es)",
+  "ano": "AAAA",
+  "titulo": "Título del documento",
+  "editorial": "Editorial, institución o nombre del sitio",
+  "url": "URL o DOI disponible en el documento",
+  "nota": "Información breve sobre la fiabilidad o limitación de los datos extraídos"
+}
+Si un dato no aparece claramente, usa una cadena vacía. No inventes autores, años, editoriales ni URLs.
+Nombre de archivo disponible: "${fileName || 'Documento'}".
+`;
+  },
+
+  diagram(fileName, diagramType) {
+    const names = {
+      mindmap: 'mapa conceptual',
+      flowchart: 'diagrama de flujo',
+      erDiagram: 'diagrama entidad-relación',
+      classDiagram: 'diagrama UML'
+    };
+    return `
+Analiza el contenido de este PDF y genera el código Mermaid de un ${names[diagramType] || 'mapa conceptual'} basado exclusivamente en sus conceptos principales.
+Devuelve ÚNICAMENTE código Mermaid válido, sin explicaciones, sin comillas externas y sin bloques markdown.
+Limita el resultado a entre 8 y 18 conceptos o relaciones.
+Usa etiquetas breves y texto plano. Nombre de archivo: "${fileName || 'Documento'}".
+`;
   }
 };

@@ -131,6 +131,39 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('apa-preview').textContent = citation;
     };
     inputs.forEach(id => document.getElementById(id).addEventListener('input', updatePreview));
+    document.getElementById('generate-apa').addEventListener('click', async event => {
+      const documentId = DocumentModel.currentDocumentId;
+      if (!documentId) {
+        UtilityView.showStatus('Selecciona un PDF antes de extraer los datos APA.', true);
+        return;
+      }
+      const button = event.currentTarget;
+      button.disabled = true;
+      UtilityView.showStatus('Extrayendo datos bibliográficos del PDF...');
+      try {
+        const response = await ApiService.askQuestion(
+          documentId,
+          PromptService.apa(DocumentModel.currentFileName)
+        );
+        const parsed = JSON.parse(response.answer.trim()
+          .replace(/^```(?:json)?/i, '')
+          .replace(/```$/, '')
+          .trim());
+        document.getElementById('apa-author').value = parsed.autor || '';
+        document.getElementById('apa-year').value = parsed.ano || '';
+        document.getElementById('apa-title').value = parsed.titulo || '';
+        document.getElementById('apa-publisher').value = parsed.editorial || '';
+        document.getElementById('apa-url').value = parsed.url || '';
+        updatePreview();
+        UtilityView.showStatus(parsed.nota
+          ? `Datos extraídos. ${parsed.nota}`
+          : 'Datos bibliográficos extraídos del PDF.');
+      } catch (error) {
+        UtilityView.showStatus('No fue posible extraer datos bibliográficos fiables del PDF.', true);
+      } finally {
+        button.disabled = false;
+      }
+    });
     document.getElementById('copy-apa').addEventListener('click', async () => {
       const citation = document.getElementById('apa-preview').textContent;
       try {
@@ -157,6 +190,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('render-diagram').addEventListener('click', renderDiagram);
     document.getElementById('download-diagram').addEventListener('click', downloadDiagram);
+    document.getElementById('generate-diagram-from-pdf').addEventListener('click', async event => {
+      const documentId = DocumentModel.currentDocumentId;
+      if (!documentId) {
+        UtilityView.showStatus('Selecciona un PDF antes de generar el diagrama.', true);
+        return;
+      }
+      const button = event.currentTarget;
+      button.disabled = true;
+      UtilityView.showStatus('Analizando el PDF y creando el diagrama...');
+      try {
+        const response = await ApiService.askQuestion(
+          documentId,
+          PromptService.diagram(DocumentModel.currentFileName, currentDiagramType)
+        );
+        source.value = response.answer.trim()
+          .replace(/^```(?:mermaid)?/i, '')
+          .replace(/```$/, '')
+          .trim();
+        await renderDiagram();
+      } catch (error) {
+        UtilityView.showStatus('No fue posible generar el diagrama desde el PDF.', true);
+      } finally {
+        button.disabled = false;
+      }
+    });
   }
 
   function defaultDiagramSource(type) {

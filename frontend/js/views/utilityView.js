@@ -84,7 +84,8 @@ const UtilityView = {
   renderApa(documentName) {
     const title = documentName ? documentName.replace(/\.pdf$/i, '').replace(/[_-]/g, ' ') : '';
     this.body.innerHTML = `
-      <p class="utility-description">Completa los datos y copia una referencia con formato APA 7.</p>
+      <p class="utility-description">Genera una referencia desde el PDF o completa los datos manualmente.</p>
+      <button id="generate-apa" class="utility-secondary-button" type="button">Extraer datos del PDF con IA</button>
       <div class="utility-form-grid">
         <label class="utility-field utility-field-wide">Autor(es)
           <input id="apa-author" type="text" placeholder="Ej. Pérez, J. M.">
@@ -113,6 +114,7 @@ const UtilityView = {
   renderDiagrams() {
     this.body.innerHTML = `
       <p class="utility-description">Genera mapas conceptuales, diagramas de flujo, UML o entidad-relación.</p>
+      <button id="generate-diagram-from-pdf" class="utility-secondary-button" type="button">Generar automáticamente desde el PDF</button>
       <div class="diagram-type-list" role="tablist" aria-label="Tipo de diagrama">
         <button type="button" class="diagram-type active" data-diagram-type="mindmap">Mapa conceptual</button>
         <button type="button" class="diagram-type" data-diagram-type="flowchart">Flujo</button>
